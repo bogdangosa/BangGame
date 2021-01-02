@@ -1,0 +1,43 @@
+.Login{
+    width: 100%;
+    height: 100vh;
+    background-color: #F3F390;
+}
+
+.LoginTitle{
+    font-size: 3rem;
+    font-weight: 400;
+    width: 100%;
+    text-align: center;
+    padding-top: 5vh;
+    color:#3B3B3B;
+}
+
+.LoginForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 50%;
+    height: 60%;
+    background-color: #FCFFE1;
+    margin-left: 15%;
+    margin-top: 7vh;
+    padding: 5vh 10vw;
+}
+
+.LoginInput{
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #868686;
+    border-radius: 0.3rem;
+    outline: none;
+}
+
+.LoginButtons{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 60%;
+
+}
