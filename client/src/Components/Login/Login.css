@@ -39,5 +39,8 @@
     justify-content: space-between;
     align-items: center;
     min-width: 60%;
+}
 
+.LoginButton{
+    text-decoration:none;
 }
