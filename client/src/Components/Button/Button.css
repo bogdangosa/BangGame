@@ -5,4 +5,12 @@
     text-align: center;
     border-radius: 0.5rem;
     cursor: pointer;
+    transition: 0.5s ease;
+    box-sizing: border-box;
+    border:1px #5AFF6B solid;
+}
+
+.Button:hover{
+    background-color: #fff;
+    color: #5AFF6B;
 }
