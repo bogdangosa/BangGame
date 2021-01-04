@@ -24,8 +24,6 @@ class Jucator
         this.#player=player;
         this.#hp=8;
         this.#nrOfArrows=0;
-        this.#left=NULL;
-        this.#right=NULL;
     }
     
 

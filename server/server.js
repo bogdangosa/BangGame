@@ -19,7 +19,9 @@ const io = require('socket.io')(http, {
 
 
 const { Jucator } = require('./JucatorClass');
+const lib=require("./AuxFunctions");
 let PlayersArray = [];
+let FinalPlayerArray=[];
 
 io.on('connection',socket=>{
     //console.log("New User");
@@ -40,6 +42,7 @@ io.on('connection',socket=>{
 
     socket.on('PlayerReady',PlayerName=>{
       console.log(`${PlayerName} is Ready`);
+      FinalPlayerArray=lib.startOfGame(PlayersArray);
     })
 
     socket.on('disconnect',reason=>{
