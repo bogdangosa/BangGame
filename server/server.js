@@ -30,17 +30,13 @@ io.on('connection',socket=>{
     })
 
     socket.on('NewUser',Name=>{
-        let NewPlayer = new Jucator(Name,"Sherif");
-        PlayersArray.push(NewPlayer);
+
+        PlayersArray.push(new Jucator(Name,"Sherif"));
         
-        socket.broadcast.emit('NewPlayer',Name);
-        socket.emit('NewPlayer',Name);
+        io.emit('PlayersArray',PlayersArray);
         
     })
 
-    socket.on('PlayerReady',PlayerName=>{
-      console.log(`${PlayerName} is Ready`);
-    })
 
     socket.on('disconnect',reason=>{
       console.log("User Disconnected");

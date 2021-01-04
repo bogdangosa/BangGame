@@ -1,22 +1,21 @@
-import React,{useEffect} from 'react'
+import React,{useState} from 'react'
 import Button from '../Button/Button';
 import './Lobby.css'
 import CharacterPhoto from './Images/CharacterPhoto.jpg'
 
 const Lobby = (props)=> {
-    let playersArray = [];
-
+    const [playersArray,SetplayersArray] = useState([]);
     let socket = props.socket;
+    
 
-    socket.on('NewPlayer',NewPlayer=>{
-        playersArray.push(NewPlayer);
+    socket.on('PlayersArray',PlayersArray=>{
+        
+        SetplayersArray(PlayersArray);
+        /*PlayersArray.forEach(Player => {
+            console.log(Player);
+        });*/
         console.log(playersArray);
     })
-
-
-    const PlayerReady = ()=> {
-        socket.emit('PlayerReady',playersArray[0]);
-    }
 
     return (
         <div className="Lobby">
@@ -30,14 +29,13 @@ const Lobby = (props)=> {
                     <img src={CharacterPhoto}></img>
                     <p className="PlayerName">Un Nume</p>
                 </div>
-
                 {
                     playersArray.map(player=>{
                         console.log("Got Here");
                         return (
                             <div className="PlayerContainer" >
                                 <img src={CharacterPhoto}></img>
-                                <p className="PlayerName">{player}</p>
+                                <p className="PlayerName">Test</p>
                             </div>
                         );
                     })
@@ -45,7 +43,7 @@ const Lobby = (props)=> {
 
 
             </div>
-            <Button Text="Ready" className="ReadyButton" onClick={()=>PlayerReady()}/>
+            <Button Text="Ready" className="ReadyButton"/>
         </div>
     )
 }
