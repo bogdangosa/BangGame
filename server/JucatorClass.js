@@ -27,30 +27,24 @@ class Jucator
     //the player takes damage equal to damageAmount
     takeDamage(damageAmount)
     {
-        this.#hp=this.#hp-this.#damageAmount;
+        if(damageAmount)
+            this.#hp=this.#hp-damageAmount;    
+        else
+            this.#hp--;
         return this.#hp;
     }
 
-    //Overwrite for quick use
-    takeDamage()
-    {
-        hp=hp-1;
-        return this.#hp;
-    }
 
     //the player heals healAmount points of health
     heal(healAmount)
     {
-        hp=hp+healAmount;
+        if(healAmount)
+            this.#hp=this.#hp+healAmount;    
+        else
+            this.#hp++;
         return this.#hp;
     }
 
-    //overwrite for quick use
-    heal()
-    {
-        hp++;
-        return this.#hp;
-    }
 
     //returns the hp of the player
     getHp()
@@ -76,13 +70,18 @@ class Jucator
         return this.#nrOfArrows;
     }
 
+    takeArrow()
+    {
+        this.#nrOfArrows++;
+    }
     //function to be called when that arrow stack is empty
     takeDamageFromArrows()
     {
         this.#hp=this.#hp-this.#nrOfArrows;
+        this.#nrOfArrows=0;
         return this.#hp;
     }
 
-
-
+    
 }
+module.exports={Jucator}
