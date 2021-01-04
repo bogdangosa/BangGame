@@ -46,4 +46,25 @@ function startOfGame(PlayersArray)
 
 }
 
-module.exports={startOfGame};
+function CreateNameArray(PlayersArray){
+    const { Jucator } = require('./JucatorClass');
+    let NameArray = [];
+    PlayersArray.forEach(Player => {
+        NameArray.push(Player.getPlayer());
+    });
+    return NameArray;
+}
+
+function CreateRoleArray(PlayersArray){
+    const { Jucator } = require('./JucatorClass');
+    let RoleArray = [];
+    PlayersArray.forEach(Player => {
+        NameArray.push(Player.getPlayer());
+    });
+    return NameArray;
+}
+
+
+module.exports={ startOfGame , CreateNameArray };
+
+

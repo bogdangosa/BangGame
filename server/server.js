@@ -19,9 +19,10 @@ const io = require('socket.io')(http, {
 
 
 const { Jucator } = require('./JucatorClass');
-const lib=require("./AuxFunctions");
+const lib = require("./AuxFunctions");
 let PlayersArray = [];
 let FinalPlayerArray=[];
+let PlayersReady = 0;
 
 io.on('connection',socket=>{
     //console.log("New User");
@@ -36,13 +37,27 @@ io.on('connection',socket=>{
         PlayersArray.push(NewPlayer);
         
         socket.broadcast.emit('NewPlayer',Name);
-        socket.emit('NewPlayer',Name);
+        socket.emit('CurentPlayers',lib.CreateNameArray(PlayersArray));
         
     })
 
     socket.on('PlayerReady',PlayerName=>{
-      console.log(`${PlayerName} is Ready`);
-      FinalPlayerArray=lib.startOfGame(PlayersArray);
+      
+      if(++PlayersReady == 3){
+        FinalPlayerArray=lib.startOfGame(PlayersArray);
+        io.emit('GameStarted');
+
+      }
+      console.log(`${PlayerName} is Ready from ${PlayersReady}`);
+      
+    })
+
+    socket.on('getRole',PlayerName=>{
+      FinalPlayerArray.forEach(FinalPlayer=>{
+        if(FinalPlayer.getPlayer()==PlayerName){
+          socket.emit('sendRole',FinalPlayerArray.getRole());
+        }
+      })
     })
 
     socket.on('disconnect',reason=>{
