@@ -4,17 +4,9 @@ import Button from '../Button/Button'
 import io from 'socket.io-client'
 import {Link} from 'react-router-dom'
 
-const Login = ()=>{
+const Login = (props)=>{
     const [Name,setName] = useState('');
-    let socket = io("http://localhost:5000/");
-
-    useEffect(()=>{
-      socket.emit('message','New User Connected');
-      socket.on('message',message=>{
-        console.log(message);
-      })
-  
-    },[]);
+    let socket = props.socket;
 
     const JoinGame = () =>{
         socket.emit('NewUser',Name);
