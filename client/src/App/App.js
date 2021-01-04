@@ -8,15 +8,18 @@ import io from 'socket.io-client'
 
 
 function App() {
-
+  
+  //declar variabila socket si o conectez la server
   let socket = io("http://localhost:5000/");
 
   useEffect(()=>{
+    //Trimit Mesaj la server ca m-am conectat
     socket.emit('message','New User Connected');
 
   },[]);
 
 
+  //Creez Rutele Siteului
   return (
     <div className="App">
       <Router>

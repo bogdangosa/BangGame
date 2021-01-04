@@ -1,6 +1,3 @@
-
-
-
 const server = require('express')();
 const cors = require('cors');
 server.use(cors());
@@ -10,7 +7,12 @@ const http = require('http').createServer(server);
 
 const PORT = process.env.PORT || 5000;
 
-const io = require('socket.io')(http);
+const io = require('socket.io')(http, {
+    cors: {
+      origin: "http://localhost:3000",
+      methods: ["GET", "POST"]
+    }
+  });
 
 
 io.listen(PORT,()=>console.log(`Listening on Port ${PORT}`))

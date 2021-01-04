@@ -5,12 +5,18 @@ import io from 'socket.io-client'
 import {Link} from 'react-router-dom'
 
 const Login = (props)=>{
+    //Declar variabila nume care va tine valoarea inputului nume
     const [Name,setName] = useState('');
+    
     let socket = props.socket;
 
+
+    //Functie care Transmite la server ca user-ul a intat intr-un meci
     const JoinGame = () =>{
         socket.emit('NewUser',Name);
     }
+
+    //Functie care updateaza valoarea variabiei name
     const ChangeName = e =>{
         setName(e.target.value);
         //console.log(Name);

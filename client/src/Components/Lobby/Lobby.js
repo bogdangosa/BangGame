@@ -4,9 +4,8 @@ import './Lobby.css'
 import CharacterPhoto from './Images/CharacterPhoto.jpg'
 
 const Lobby = (props)=> {
+
     let socket = props.socket;
-
-
 
     return (
         <div className="Lobby">
