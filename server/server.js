@@ -15,7 +15,11 @@ const io = require('socket.io')(http, {
   });
 
 
-io.listen(PORT,()=>console.log(`Listening on Port ${PORT}`))
+  io.listen(PORT,()=>console.log(`Listening on Port ${PORT}`))
+
+
+const { Jucator } = require('./JucatorClass');
+let PlayersArray = [];
 
 io.on('connection',socket=>{
     //console.log("New User");
@@ -26,17 +30,30 @@ io.on('connection',socket=>{
     })
 
     socket.on('NewUser',Name=>{
-        console.log(Name);
+
+        PlayersArray.push(new Jucator(Name,"Sherif"));
+        
+        io.emit('PlayersArray',PlayersArray);
+        
     })
+
+
+    socket.on('disconnect',reason=>{
+      console.log("User Disconnected");
+      //PlayersArray.pop();
+      //io.emit('PlayersArray',PlayersArray);
+    })
+
+
 })
 
 
 
-const {Jucator}=require('./JucatorClass');
+
 
 //Function testing  
 
-
+/*
 let j=new Jucator("Nugga","Serif");
 console.log(j.getPlayer());
 console.log(j.getHp());
@@ -45,6 +62,6 @@ console.log(j.takeDamage(4));
 console.log(j.heal());
 console.log(j.heal(2));
 j.takeArrow();
-console.log(j.takeDamageFromArrows());
+console.log(j.takeDamageFromArrows());*/
 
 
