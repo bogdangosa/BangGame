@@ -7,6 +7,7 @@ class Jucator
     hp-hitpoints/health
     role-role of the player:sherif/bandit/outlaw
     nrOfArrows- number of arrows the player has taken
+    #right and #left are the players sitting to the right or left to the player
     */
 
     //declaration of "private" variables 
@@ -14,13 +15,17 @@ class Jucator
     #role;
     #hp;
     #nrOfArrows;
+    #left;
+    #right;
 
-    constructor(player,role)
+
+    constructor(player)
     {
         this.#player=player;
-        this.#role=role;
         this.#hp=8;
         this.#nrOfArrows=0;
+        this.#left=NULL;
+        this.#right=NULL;
     }
     
 
@@ -70,6 +75,10 @@ class Jucator
         return this.#nrOfArrows;
     }
 
+    setRole(role)
+    {
+        this.#role=role;
+    }
     takeArrow()
     {
         this.#nrOfArrows++;
