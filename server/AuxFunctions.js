@@ -9,7 +9,24 @@ function startOfGame(PlayersArray)
     {
         case 3:
             roleArray=["Bandit","Outlaw","Deputee"];
-            while(n)
+            break;
+        case 4:
+            roleArray=["Bandit","Outlaw","Sherif","Deputee"];
+            break;
+        case 5:
+            roleArray=["Bandit","Outlaw","Deputee","Bandit","Sherif"];
+            break;
+        case 6:
+            roleArray=["Bandit","Outlaw","Deputee","Bandit","Sherif","Deputee"];
+            break;
+        case 7:
+            roleArray=["Bandit","Outlaw","Deputee","Bandit","Sherif","Deputee","Bandit"];
+            break;
+        case 8:
+            roleArray=["Bandit","Outlaw","Deputee","Bandit","Sherif","Deputee","Bandit","Outlaw"];
+            break;
+    }
+    while(n)
             {
                 let p=Math.floor(Math.random()*n);
                 PlayerArray1.push(PlayersArray[p]);
@@ -26,8 +43,6 @@ function startOfGame(PlayersArray)
                 //j.setRole(roleArray[i]);
             }
             return PlayerArray1;
-            break;
-    }
 
 }
 
