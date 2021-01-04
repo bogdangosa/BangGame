@@ -30,7 +30,7 @@ io.on('connection',socket=>{
     })
 
     socket.on('NewUser',Name=>{
-        let NewPlayer = new Jucator(Name,"Sherif");
+        let NewPlayer = new Jucator(Name);
         PlayersArray.push(NewPlayer);
         
         socket.broadcast.emit('NewPlayer',Name);
