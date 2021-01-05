@@ -47,6 +47,12 @@ io.on('connection',socket=>{
       console.log(PlayersArray.length);
       if(PlayersReady == PlayersArray.length && PlayersReady>=3){
         FinalPlayerArray=lib.startOfGame(PlayersArray);
+        FinalPlayerArray.forEach(Player=>{
+        
+          console.log(Player.getPlayer());
+          console.log(Player.getLeft().getPlayer());
+          console.log(Player.getRight().getPlayer());
+        })
         console.log(FinalPlayerArray);
         io.emit('GameStarted');
 

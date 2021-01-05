@@ -81,6 +81,26 @@ class Jucator
     {
         this.#nrOfArrows++;
     }
+
+    getRight()
+    {
+        return this.#right;
+    }
+
+    setRight(right)
+    {
+        this.#right=right;
+    }
+
+    getLeft()
+    {
+        return this.#left;
+    }
+
+    setLeft(left)
+    {
+        this.#left=left;
+    }
     //function to be called when that arrow stack is empty
     takeDamageFromArrows()
     {

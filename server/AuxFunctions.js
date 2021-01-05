@@ -42,7 +42,20 @@ function startOfGame(PlayersArray)
                 //let j=PlayersArray[i];
                 //j.setRole(roleArray[i]);
             }
-            return PlayerArray1;
+            
+    for(let i=0;i<PlayerArray1.length-1;i++)
+    {
+        PlayerArray1[i].setRight(PlayerArray1[i+1]);
+    }
+
+    for(let i=PlayerArray1.length-1;i>0;i--)
+    {
+        PlayerArray1[i].setLeft(PlayerArray1[i-1]);
+    }
+    PlayerArray1[0].setLeft(PlayerArray1[PlayerArray1.length-1]);
+    PlayerArray1[PlayerArray1.length-1].setRight(PlayerArray1[0]);
+    return PlayerArray1;
+
 
 }
 
