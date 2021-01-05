@@ -2,9 +2,9 @@ function startOfGame(PlayersArray)
 {
     Arrows=9;
     let n=PlayersArray.length
-    var PlayerArray1=[];
-    var RoleArray=[]
     const { Jucator } = require('./JucatorClass');
+    var PlayerArray1 = [];
+    var RoleArray = [];
     switch(n)
     {
         case 3:
