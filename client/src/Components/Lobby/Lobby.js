@@ -1,7 +1,8 @@
 import React,{ useState , useEffect } from 'react'
 import Button from '../Button/Button';
 import './Lobby.css'
-import CharacterPhoto from './Images/CharacterPhoto.jpg'
+import CharacterPhoto from '../CharacterImages/BlackJack.jpg'
+import { useHistory } from "react-router-dom";
 
 const Lobby = (props)=> {
     const [playersArray,SetPlayersArray] = useState([]);
@@ -9,6 +10,8 @@ const Lobby = (props)=> {
     const [CurentPlayersName,setCurentPlayersName]= useState('');
 
     let socket = props.socket;
+
+    const history = useHistory();
 
 
     socket.on('NewPlayer',NewPlayer=>{
@@ -29,15 +32,12 @@ const Lobby = (props)=> {
 
     socket.on('GameStarted',()=>{
         console.log("Game Started");
-        socket.emit('GetRole',CurentPlayersName);
-
+        //socket.emit('GetRole',CurentPlayersName);
+        socket.removeAllListeners("GameStarted");
+        history.push("/Game");
     })
 
-    socket.on('sendRole',Role=>{
-        console.log(Role);
-    })
         
-
     const PlayerReady = ()=> {
         if(!ReadyState){
             console.log(CurentPlayersName);

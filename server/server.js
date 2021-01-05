@@ -48,9 +48,11 @@ io.on('connection',socket=>{
       if(PlayersReady == PlayersArray.length && PlayersReady>=3){
         FinalPlayerArray=lib.startOfGame(PlayersArray);
         
-        
-
         io.emit('GameStarted');
+        FinalPlayerArray.forEach(FinalPlayer=>{
+          io.to(FinalPlayer.getId()).emit('sendStartingData',{role:FinalPlayer.getRole(),name:FinalPlayer.getPlayer()});
+        })
+
 
       }
       console.log(`${PlayerName} is Ready from ${PlayersReady}`);
@@ -59,14 +61,6 @@ io.on('connection',socket=>{
 
     socket.on('PlayerNotReady',PlayerName=>{
       PlayersReady--;      
-    })
-
-    socket.on('GetRole',PlayerName=>{
-      FinalPlayerArray.forEach(FinalPlayer=>{
-        if(FinalPlayer.getPlayer()==PlayerName){
-          socket.emit('sendRole',FinalPlayer.getRole());
-        }
-      })
     })
 
     socket.on('disconnect',reason=>{
