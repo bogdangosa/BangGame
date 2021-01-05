@@ -34,7 +34,7 @@ io.on('connection',socket=>{
 
     socket.on('NewUser',Name=>{
         //console.log(Name);
-        let NewPlayer = new Jucator(Name);
+        let NewPlayer = new Jucator(Name,socket.id);
         PlayersArray.push(NewPlayer);
         
         socket.broadcast.emit('NewPlayer',Name);
@@ -47,13 +47,9 @@ io.on('connection',socket=>{
       console.log(PlayersArray.length);
       if(PlayersReady == PlayersArray.length && PlayersReady>=3){
         FinalPlayerArray=lib.startOfGame(PlayersArray);
-        FinalPlayerArray.forEach(Player=>{
         
-          console.log(Player.getPlayer());
-          console.log(Player.getLeft().getPlayer());
-          console.log(Player.getRight().getPlayer());
-        })
-        console.log(FinalPlayerArray);
+        
+
         io.emit('GameStarted');
 
       }

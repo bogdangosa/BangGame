@@ -11,6 +11,7 @@ class Jucator
     */
 
     //declaration of "private" variables 
+    #id;
     #player;
     #role;
     #hp;
@@ -19,8 +20,9 @@ class Jucator
     #right;
 
 
-    constructor(player)
+    constructor(player,id)
     {
+        this.#id=id;
         this.#player=player;
         this.#hp=8;
         this.#nrOfArrows=0;
@@ -48,6 +50,10 @@ class Jucator
         return this.#hp;
     }
 
+    getId()
+    {
+        return this.#id;
+    }
 
     //returns the hp of the player
     getHp()
