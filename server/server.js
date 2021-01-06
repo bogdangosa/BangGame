@@ -55,13 +55,21 @@ io.on('connection',socket=>{
 
 
       }
-      console.log(`${PlayerName} is Ready from ${PlayersReady}`);
-      
+      console.log(`${PlayerName} is Ready from ${PlayersReady}`); 
     })
 
     socket.on('PlayerNotReady',PlayerName=>{
       PlayersReady--;      
     })
+
+
+    //receives the PlayerRole of the player to be eliminated, deletes him from array and emits to the rest of players his role
+    socket.on('PlyaerEliminated',PlayerRole=>
+    {
+      FinalPlayerArray=PlayerEliminated(socket.id,FinalPlayerArray);
+      io.emit('RoleOfDead',PlayerRole);
+    })
+
 
     socket.on('disconnect',reason=>{
       console.log("User Disconnected");

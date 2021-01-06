@@ -77,6 +77,18 @@ function CreateRoleArray(PlayersArray){
     return NameArray;
 }
 
+function PlayerEliminated(id,playerArray)
+{
+    let Jucator,JucatorAux;
+    Jucator=playerArray.find(Jucator=>Jucator.getId()==id);            
+    Jucator.getLeft().setRight(Jucator.getRight());                //connection between left and right of the player are beeing made
+    Jucator.getRight().setLeft(Jucator.getLeft());
+    JucatorAux=playerArray[0];
+    playerArray[0]=Jucator;
+    Jucator=JucatorAux;
+    playerArray.shift();
+    return playerArray;
+}
 
 module.exports={ startOfGame , CreateNameArray };
 
