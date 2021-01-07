@@ -8,6 +8,7 @@ const Lobby = (props)=> {
     const [playersArray,SetPlayersArray] = useState([]);
     const [ReadyState,SetReadyState] = useState(false);
     const [CurentPlayersName,setCurentPlayersName]= useState('');
+    const [RoomId,SetRoomId]= useState('error');
 
     let socket = props.socket;
 
@@ -20,12 +21,15 @@ const Lobby = (props)=> {
         //console.log(NewPlayer);
     })
 
-    socket.on('CurentPlayers',CurentPlayersArray=>{
+    socket.on('StartingLobbyData',StartingLobbyData=>{
+       SetRoomId(StartingLobbyData.room);
+       let CurentPlayersArray = StartingLobbyData.curentPlayersArray;
+
         setCurentPlayersName(CurentPlayersArray[CurentPlayersArray.length-1]);
         
         SetPlayersArray(CurentPlayersArray);
         //console.log(CurentPlayersArray);
-        console.log(CurentPlayersName);
+        //console.log(CurentPlayersName);
         
     })
     
@@ -41,20 +45,19 @@ const Lobby = (props)=> {
     const PlayerReady = ()=> {
         if(!ReadyState){
             console.log(CurentPlayersName);
-            socket.emit('PlayerReady',CurentPlayersName);
+            socket.emit('PlayerReady',RoomId);
             SetReadyState(true);
         }
         else {
-            socket.emit('PlayerNotReady',CurentPlayersName);
+            socket.emit('PlayerNotReady',RoomId);
             SetReadyState(false);
         }
 
-        
     }
 
     return (
         <div className="Lobby">
-            <p className="LobbyCode">room code: 23f4-33fg-12ff </p>
+            <p className="LobbyCode">room code:{RoomId}</p>
             <div className="PlayersContainer">
                 {
                     playersArray.map((player,index)=>{

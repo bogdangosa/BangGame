@@ -6,9 +6,11 @@ const Game = (props)=>{
     const [CurentPlayerRole,SetCurentPlayerRole] = useState('');
     const [CurentPlayerName,SetCurentPlayerName] = useState('');
     let socket = props.socket;
+    let RoomId;
 
     socket.on('sendStartingData',data=>{
         //console.log(Role);
+        RoomId = data.room;
         SetCurentPlayerRole(data.role);
         SetCurentPlayerName(data.name);
         socket.removeAllListeners("sendStartingData");

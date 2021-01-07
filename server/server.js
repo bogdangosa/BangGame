@@ -19,10 +19,13 @@ const io = require('socket.io')(http, {
 
 
 const { Jucator } = require('./JucatorClass');
+const { Room } = require('./RoomClass');
 const lib = require("./AuxFunctions");
-let PlayersArray = [];
-let FinalPlayerArray=[];
-let PlayersReady = 0;
+/*let PlayersArray = [];
+let FinalPlayerArray=[];*/
+
+let RoomArray = [];
+
 
 io.on('connection',socket=>{
     //console.log("New User");
@@ -32,39 +35,59 @@ io.on('connection',socket=>{
         socket.broadcast.emit('message',message);
     })
 
-    socket.on('NewUser',Name=>{
-        //console.log(Name);
-        let NewPlayer = new Jucator(Name,socket.id);
-        PlayersArray.push(NewPlayer);
-        
-        socket.broadcast.emit('NewPlayer',Name);
-        socket.emit('CurentPlayers',lib.CreateNameArray(PlayersArray));
+
+    socket.on('CreateGame',Name=>{
+      //let NewPlayer = new Jucator(Name,socket.id);
+      let NewRoom = new Room(socket.id);
+      RoomArray.push(NewRoom);
+
+      socket.join(NewRoom.RoomId);
+      console.log(socket.id + " now in rooms ", socket.rooms);
+
+      NewRoom.AddPlayer(Name,socket.id);
+
+      socket.broadcast.to(NewRoom.RoomId).emit('NewPlayer',Name);
+      socket.emit('StartingLobbyData',{room:NewRoom.RoomId,curentPlayersArray:lib.CreateNameArray(NewRoom.PlayersArray)});
+    })
+
+
+    socket.on('NewUser',(UserData)=>{
+      let cRoom = RoomArray.find(sRoom=> sRoom.RoomId == UserData.room); 
+    
+      cRoom.AddPlayer(UserData.name,socket.id);
+      socket.join(cRoom.RoomId);
+
+
+      socket.broadcast.to(cRoom.RoomId).emit('NewPlayer',UserData.name);
+      socket.emit('StartingLobbyData',{room:cRoom.RoomId,curentPlayersArray:lib.CreateNameArray(cRoom.PlayersArray)});
         
     })
 
-    socket.on('PlayerReady',PlayerName=>{
-      PlayersReady++;
-      console.log(PlayersArray.length);
-      if(PlayersReady == PlayersArray.length && PlayersReady>=3){
-        FinalPlayerArray=lib.startOfGame(PlayersArray);
+    socket.on('PlayerReady',RoomName=>{
+      let cRoom = RoomArray.find(sRoom => sRoom.RoomId == RoomName); 
+      cRoom.PlayersReady++;
+
+      if(cRoom.PlayersReady == cRoom.PlayersArray.length && cRoom.PlayersReady>=3){
+        cRoom.PlayersArray = lib.startOfGame(cRoom.PlayersArray);
         
-        io.emit('GameStarted');
-        FinalPlayerArray.forEach(FinalPlayer=>{
-          io.to(FinalPlayer.getId()).emit('sendStartingData',{role:FinalPlayer.getRole(),name:FinalPlayer.getPlayer()});
+        io.to(cRoom.RoomId).emit('GameStarted');
+        cRoom.PlayersArray.forEach(Player=>{
+          io.to(Player.getId()).emit('sendStartingData',{role:Player.getRole(),name:Player.getPlayer()});
         })
 
 
       }
-      console.log(`${PlayerName} is Ready from ${PlayersReady}`); 
+      //console.log(`${UserData.name} is Ready from ${cRoom.PlayersReady} in room ${cRoom.RoomId}`); 
     })
 
-    socket.on('PlayerNotReady',PlayerName=>{
-      PlayersReady--;      
+    socket.on('PlayerNotReady',RoomName=>{
+      let cRoom = RoomArray.find(sRoom=> sRoom.RoomId == RoomName); 
+      cRoom.PlayersReady--;      
     })
 
 
     //receives the PlayerRole of the player to be eliminated, deletes him from array and emits to the rest of players his role
-    socket.on('PlyaerEliminated',PlayerRole=>
+    socket.on('PlayerEliminated',PlayerRole=>
     {
       FinalPlayerArray=PlayerEliminated(socket.id,FinalPlayerArray);
       io.emit('RoleOfDead',PlayerRole);
@@ -72,6 +95,7 @@ io.on('connection',socket=>{
 
 
     socket.on('disconnect',reason=>{
+
       console.log("User Disconnected");
       //PlayersArray.pop();
       //io.emit('PlayersArray',PlayersArray);
