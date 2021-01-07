@@ -3,8 +3,11 @@ function startOfGame(PlayersArray)
     Arrows=9;
     let n=PlayersArray.length
     const { Jucator } = require('./JucatorClass');
+    const { Room } = require('./RoomClass');
+
     var PlayerArray1 = [];
     var RoleArray = [];
+
     switch(n)
     {
         case 3:
@@ -90,6 +93,53 @@ function PlayerEliminated(id,playerArray)
     return playerArray;
 }
 
-module.exports={ startOfGame , CreateNameArray };
+
+function RollDice(diceStates,room,PlayerID)
+{
+    //diceState=0 =>free
+    //diceState=number =>blocked
+
+    /*
+    1=Cutit
+    2=Pistol
+    3=Sageata
+    4=Dinamita
+    5=Bere
+    6=gatling
+    */
+    const { Jucator } = require('./JucatorClass');
+    const { Room } = require('./RoomClass');
+    let DiceArray=[];
+    for (let i=0;i<diceStates.length;i++)
+    {
+        if(diceStates[i]==0)
+        {
+            let Dice=(Math.floor(Math.random()*6)+1);
+            DiceArray[i]=Dice;
+            if(Dice==4)
+            {
+                (room.playerArray.find(Player =>Player.getId()==PlayerID)).takeDamage();
+            }
+            else if(Dice==3)
+            {
+                (room.playerArray.find(Player =>Player.getId()==PlayerID)).takeArrow();
+                room.nrOfArrows--;
+                if(room.nrOfArrows==0)
+                {
+                    room.playerArray.forEach(PlayerWithArrows)
+                        let hp=PlayerWithArrows.takeDamageFromArrows();
+                    room.nrOfArrows=9;
+                }
+            }
+        }
+        else
+            DiceArray[i]=diceStates[i];
+       
+    }
+    return DiceArray;
+    
+
+}
+module.exports={ startOfGame , CreateNameArray, PlayerEliminated,RollDice};
 
 

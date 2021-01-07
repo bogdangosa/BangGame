@@ -5,6 +5,7 @@ class Room {
     PlayersArray 
     RoomId
     PlayersReady
+    nrOfArrows
     
 
     constructor(Host){
@@ -12,6 +13,7 @@ class Room {
         this.RoomId = (Math.floor(Math.random() *8999)+1000).toString();
         this.PlayersReady = 0;
         this.PlayersArray = [];
+        this.nrOfArrows=9;
         
     }
 

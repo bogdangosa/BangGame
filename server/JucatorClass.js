@@ -107,6 +107,7 @@ class Jucator
     {
         this.#left=left;
     }
+
     //function to be called when that arrow stack is empty
     takeDamageFromArrows()
     {
