@@ -23,7 +23,7 @@ class Room {
         let Player = new Jucator(Name,Id);
         let ch=Math.floor(Math.random() *15);
         Player.setCharacter(this.Characters[ch]);
-        let chAux=Characters[ch];
+        let chAux=this.Characters[ch];
         this.Characters[ch]=this.Characters[0];
         this.Characters[0]=chAux;
         this.Characters.shift();
