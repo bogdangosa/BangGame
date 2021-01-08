@@ -17,7 +17,8 @@ class Room {
         this.RoomId = (Math.floor(Math.random() *8999)+1000).toString();
         this.PlayersReady = 0;
         this.PlayersArray = [];
-        this.nrOfArrows=9;
+        this.nrOfArrows = 9;
+        this.PlayerToRollID = this.PlayersArray[0].getId();
         
     }
 
@@ -34,7 +35,7 @@ class Room {
 
     Turn()
     {
-        this.PlayerToRollID=PlayerArray[this.PlayersArray.find(Player=>Player.getID()==PlayerToRollID)].getLeft().getID();
+        this.PlayerToRollID=PlayerArray[this.PlayersArray.findIndex(Player=>Player.getId()==PlayerToRollID)].getLeft().getId();
     }
     
 

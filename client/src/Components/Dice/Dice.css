@@ -3,4 +3,7 @@
     height: 10vh;
     margin:1rem;
     background-color: aliceblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

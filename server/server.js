@@ -93,6 +93,15 @@ io.on('connection',socket=>{
       io.emit('RoleOfDead',PlayerRole);
     })
 
+    socket.on('nextPlayer',RoomName=>{
+      let cRoom = RoomArray.find(sRoom=> sRoom.RoomId == RoomName); 
+
+      cRoom.Turn();
+
+      socket.to(RoomName).emit('PlayersTurn',cRoom.PlayerToRollID);
+
+    })
+
 
     socket.on('disconnecting',reason=>{
 
@@ -101,6 +110,7 @@ io.on('connection',socket=>{
         
         let cRoom = RoomArray.find(sRoom=> sRoom.RoomId == RoomName); 
         cRoom.PlayersArray = lib.PlayerEliminated(socket.id , cRoom.PlayersArray);
+
 
         socket.leave(RoomName);
         socket.to(RoomName).emit( 'UserLeft' , lib.CreateNameArray(cRoom.PlayersArray) );

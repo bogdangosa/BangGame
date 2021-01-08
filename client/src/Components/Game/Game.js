@@ -1,13 +1,14 @@
 import React,{useState} from 'react'
 import './Game.css'
 import CharacterPhoto from '../CharacterImages/LuckyDuke.jpg'
-import Button from '../Button/Button';
-import Dice from '../Dice/Dice';
+import Button from '../Button/Button'
+import Dice from '../Dice/Dice'
 
 const Game = (props)=>{
     const [CurentPlayerRole,SetCurentPlayerRole] = useState('');
     const [CurentPlayerName,SetCurentPlayerName] = useState('');
     const [PlayersArray,setPlayersArray] = useState([]);
+    const [DiceValues,SetDiceValues] = useState([0,0,0,0,0]);
     let socket = props.socket;
     let RoomId;
 
@@ -25,6 +26,22 @@ const Game = (props)=>{
         socket.removeAllListeners("sendStartingData");
     })
 
+    socket.on('PlayersTurn',PlayersTurnId=>{
+        console.log(PlayersTurnId);
+    })
+
+    const RollDice = () =>{
+        console.log("dice rolled");
+        let DiceRoll = [];
+        for(let i=0;i<5;i++)
+            DiceRoll[i]=(Math.floor(Math.random()*6)+1);
+        SetDiceValues(DiceRoll);
+        
+    }
+
+    const NextPlayer = () =>{
+        socket.emit('NextPlayer',RoomId);
+    }
 
     return(
         <div className="Game">
@@ -34,14 +51,18 @@ const Game = (props)=>{
                 <p className="CurentPlayerRole">{CurentPlayerRole}</p>
             </div>
 
-            <Button Text="Roll Dice" className="RollDiceButton"/>
+            <Button Text="Roll Dice" className="RollDiceButton" onClick={ ()=>RollDice() }/>
+            <Button Text="Next Player" className="NextPlayerButton" onClick={ ()=>NextPlayer() }/>
+            
 
             <div className="DicesContainer">
-                <Dice/>
-                <Dice/>
-                <Dice/>
-                <Dice/>
-                <Dice/>
+                {
+                    DiceValues.map(DiceValue=>{
+                        return(
+                            <Dice value={DiceValue}/>
+                        )
+                    })
+                }
             </div>
             
 

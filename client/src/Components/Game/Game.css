@@ -30,6 +30,12 @@
 
 .RollDiceButton{
     position: absolute;
+    right: 20%;
+    bottom: 2.5%;
+}
+
+.NextPlayerButton{
+    position: absolute;
     right: 5%;
     bottom: 2.5%;
 }
