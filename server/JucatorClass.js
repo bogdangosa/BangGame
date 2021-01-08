@@ -16,9 +16,10 @@ class Jucator
     #role;
     #hp;
     #nrOfArrows;
+    #character;
     #left;
     #right;
-
+    
 
     constructor(player,id)
     {
@@ -108,6 +109,15 @@ class Jucator
         this.#left=left;
     }
 
+    setCharacter(c)
+    {
+        this.#character=c;
+    }
+
+    getCharacter()
+    {
+        return this.#character;
+    }
     //function to be called when that arrow stack is empty
     takeDamageFromArrows()
     {
