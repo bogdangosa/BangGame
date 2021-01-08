@@ -42,8 +42,6 @@ function startOfGame(PlayersArray)
             for(let i=0;i<PlayerArray1.length;i++)
             {
                 PlayerArray1[i].setRole(roleArray[i]);
-                //let j=PlayersArray[i];
-                //j.setRole(roleArray[i]);
             }
             
     for(let i=0;i<PlayerArray1.length-1;i++)
@@ -84,8 +82,8 @@ function PlayerEliminated(id,playerArray)
 {
     let JucatorI,JucatorAux;
     JucatorI=playerArray.findIndex(Jucator=>Jucator.getId()==id);  
-    //Jucator.getLeft().setRight(Jucator.getRight());                //connection between left and right of the player are beeing made
-    //Jucator.getRight().setLeft(Jucator.getLeft());
+    //playerArray[JucatorI].getLeft().setRight(playerArray[JucatorI].getRight());                //connection between left and right of the player are beeing made
+    //playerArray[JucatorI].getRight().setLeft(playerArray[JucatorI].getLeft());
     JucatorAux=playerArray[0];
     playerArray[0]=playerArray[JucatorI];
     playerArray[JucatorI]=JucatorAux;

@@ -8,6 +8,8 @@ class Room {
     nrOfArrows
     Characters=["Lucky Duke","Willy The Kid","Slab The Killer","Sid Ketchum","Vulture Sam","Jourdonnais","Paul Regret","Kit Carlson","Bart Cassidy","Calamity Janet",
 "Suzy Lafayette","Rose Doolan","Pedro Ramirez","Black Jack","Jesse Jones","El Gringo"]
+    DiceResult
+    PlayerToRollID
     
 
     constructor(Host){
@@ -30,6 +32,10 @@ class Room {
         this.PlayersArray.push(Player);
     }
 
+    Turn()
+    {
+        this.PlayerToRollID=PlayerArray[this.PlayersArray.find(Player=>Player.getID()==PlayerToRollID)].getLeft().getID();
+    }
     
 
 
