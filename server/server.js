@@ -72,7 +72,7 @@ io.on('connection',socket=>{
         
         io.to(cRoom.RoomId).emit('GameStarted');
         cRoom.PlayersArray.forEach(Player=>{
-          io.to(Player.getId()).emit('sendStartingData',{role:Player.getRole(),name:Player.getPlayer()});
+          io.to(Player.getId()).emit('sendStartingData',{role:Player.getRole(),name:Player.getPlayer(),playersnamearray: lib.CreateNameArray(cRoom.PlayersArray)});
         })
 
 
@@ -106,9 +106,7 @@ io.on('connection',socket=>{
         socket.to(RoomName).emit( 'UserLeft' , lib.CreateNameArray(cRoom.PlayersArray) );
       })
 
-      console.log("User Disconnected");
-      //PlayersArray.pop();
-      //io.emit('PlayersArray',PlayersArray);
+      //console.log("User Disconnected");
     })
 
 

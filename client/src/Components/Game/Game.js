@@ -7,6 +7,7 @@ import Dice from '../Dice/Dice';
 const Game = (props)=>{
     const [CurentPlayerRole,SetCurentPlayerRole] = useState('');
     const [CurentPlayerName,SetCurentPlayerName] = useState('');
+    const [PlayersArray,setPlayersArray] = useState([]);
     let socket = props.socket;
     let RoomId;
 
@@ -15,6 +16,12 @@ const Game = (props)=>{
         RoomId = data.room;
         SetCurentPlayerRole(data.role);
         SetCurentPlayerName(data.name);
+
+
+        setPlayersArray(data.playersnamearray);
+
+        console.log(data.playersnamearray);
+
         socket.removeAllListeners("sendStartingData");
     })
 
@@ -37,6 +44,21 @@ const Game = (props)=>{
                 <Dice/>
             </div>
             
+
+            <div className="GamePlayersContainer">
+               
+                {
+                    PlayersArray.map((playerName,index)=>{
+                        return(
+                        <div className={`Player PlayerPosition${index+1}`}>
+                            <img src={CharacterPhoto}></img>
+                            <p>{playerName}</p>                    
+                        </div>
+                        );
+                    })
+                }
+
+            </div>
 
         </div>
     )
