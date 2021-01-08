@@ -1,6 +1,8 @@
 import React,{useState} from 'react'
 import './Game.css'
 import CharacterPhoto from '../CharacterImages/LuckyDuke.jpg'
+import Button from '../Button/Button';
+import Dice from '../Dice/Dice';
 
 const Game = (props)=>{
     const [CurentPlayerRole,SetCurentPlayerRole] = useState('');
@@ -24,6 +26,17 @@ const Game = (props)=>{
                 <p className="CurentPlayerName">{CurentPlayerName}</p>
                 <p className="CurentPlayerRole">{CurentPlayerRole}</p>
             </div>
+
+            <Button Text="Roll Dice" className="RollDiceButton"/>
+
+            <div className="DicesContainer">
+                <Dice/>
+                <Dice/>
+                <Dice/>
+                <Dice/>
+                <Dice/>
+            </div>
+            
 
         </div>
     )

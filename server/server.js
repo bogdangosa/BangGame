@@ -89,12 +89,22 @@ io.on('connection',socket=>{
     //receives the PlayerRole of the player to be eliminated, deletes him from array and emits to the rest of players his role
     socket.on('PlayerEliminated',PlayerRole=>
     {
-      FinalPlayerArray=PlayerEliminated(socket.id,FinalPlayerArray);
+      FinalPlayerArray = PlayerEliminated(socket.id,FinalPlayerArray);
       io.emit('RoleOfDead',PlayerRole);
     })
 
 
-    socket.on('disconnect',reason=>{
+    socket.on('disconnecting',reason=>{
+
+      socket.rooms.forEach(RoomName=>{
+        if(RoomName == socket.id) return;
+        
+        let cRoom = RoomArray.find(sRoom=> sRoom.RoomId == RoomName); 
+        cRoom.PlayersArray = lib.PlayerEliminated(socket.id , cRoom.PlayersArray);
+
+        socket.leave(RoomName);
+        socket.to(RoomName).emit( 'UserLeft' , lib.CreateNameArray(cRoom.PlayersArray) );
+      })
 
       console.log("User Disconnected");
       //PlayersArray.pop();

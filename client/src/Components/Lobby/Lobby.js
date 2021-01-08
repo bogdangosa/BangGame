@@ -41,6 +41,10 @@ const Lobby = (props)=> {
         history.push("/Game");
     })
 
+    socket.on('UserLeft', rPlayersArray=>{
+        SetPlayersArray(rPlayersArray);
+    })
+
         
     const PlayerReady = ()=> {
         if(!ReadyState){
