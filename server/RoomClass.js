@@ -18,7 +18,7 @@ class Room {
         this.PlayersReady = 0;
         this.PlayersArray = [];
         this.nrOfArrows = 9;
-        this.PlayerToRollID = this.PlayersArray[0].getId();
+        //this.PlayerToRollID = this.PlayersArray[0].getId();
         
     }
 

@@ -69,6 +69,8 @@ io.on('connection',socket=>{
 
       if(cRoom.PlayersReady == cRoom.PlayersArray.length && cRoom.PlayersReady>=3){
         cRoom.PlayersArray = lib.startOfGame(cRoom.PlayersArray);
+
+        cRoom.PlayerToRollID = cRoom.PlayersArray[0].getId();
         
         io.to(cRoom.RoomId).emit('GameStarted');
         cRoom.PlayersArray.forEach(Player=>{
