@@ -35,7 +35,7 @@ class Room {
 
     Turn()
     {
-        this.PlayerToRollID=PlayerArray[this.PlayersArray.findIndex(Player=>Player.getId()==PlayerToRollID)].getLeft().getId();
+        this.PlayerToRollID = this.PlayersArray[this.PlayersArray.findIndex(Player=>Player.getId()==this.PlayerToRollID)].getLeft().getId();
     }
     
 

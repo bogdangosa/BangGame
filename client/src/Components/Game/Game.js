@@ -7,27 +7,35 @@ import Dice from '../Dice/Dice'
 const Game = (props)=>{
     const [CurentPlayerRole,SetCurentPlayerRole] = useState('');
     const [CurentPlayerName,SetCurentPlayerName] = useState('');
+    const [PlayersTurn,setPlayersTurn] = useState('');
     const [PlayersArray,setPlayersArray] = useState([]);
     const [DiceValues,SetDiceValues] = useState([0,0,0,0,0]);
+    const [RoomId,SetRoomId]= useState('error');
     let socket = props.socket;
-    let RoomId;
 
     socket.on('sendStartingData',data=>{
-        //console.log(Role);
-        RoomId = data.room;
+        SetRoomId(data.room);
         SetCurentPlayerRole(data.role);
         SetCurentPlayerName(data.name);
 
+        let AuxPlayerArray = [];
 
-        setPlayersArray(data.playersnamearray);
+        data.playersnamearray.forEach(PlayerName => {
+            if(data.name == PlayerName) return;
+            AuxPlayerArray.push(PlayerName);
+        });
 
-        console.log(data.playersnamearray);
+        setPlayersArray(AuxPlayerArray);
+        setPlayersTurn(data.playersturn);
+
+        console.log(data.playersturn);
 
         socket.removeAllListeners("sendStartingData");
     })
 
-    socket.on('PlayersTurn',PlayersTurnId=>{
-        console.log(PlayersTurnId);
+    socket.on('PlayersTurn',PlayersTurnName=>{
+        console.log(PlayersTurnName);
+        setPlayersTurn(PlayersTurnName);
     })
 
     const RollDice = () =>{
@@ -40,19 +48,25 @@ const Game = (props)=>{
     }
 
     const NextPlayer = () =>{
+        if(CurentPlayerName != PlayersTurn) return;
         socket.emit('NextPlayer',RoomId);
+        setPlayersTurn(''); //To be fixed
     }
 
     return(
         <div className="Game">
             <div className="CurentPlayerInfo">
                 <img src={CharacterPhoto} className="CurentPlayerImage"></img>
-                <p className="CurentPlayerName">{CurentPlayerName}</p>
-                <p className="CurentPlayerRole">{CurentPlayerRole}</p>
+                <div className="CurentPlayerNameRoleContainer">
+                    <p className="CurentPlayerName">{CurentPlayerName}</p>
+                    <p className="CurentPlayerRole">{CurentPlayerRole}</p>
+                </div>
+                {CurentPlayerName == PlayersTurn ? <p className="CurentPlayersTurn">*</p>: <p></p>}  
+                
             </div>
 
-            <Button Text="Roll Dice" className="RollDiceButton" onClick={ ()=>RollDice() }/>
-            <Button Text="Next Player" className="NextPlayerButton" onClick={ ()=>NextPlayer() }/>
+            <Button Text="Roll Dice" className="RollDiceButton" onClick={ ()=>RollDice() } Selected={false}/>
+            <Button Text="Next Player" className="NextPlayerButton" onClick={ ()=>NextPlayer() } Selected={ CurentPlayerName != PlayersTurn}/>
             
 
             <div className="DicesContainer">
@@ -73,7 +87,8 @@ const Game = (props)=>{
                         return(
                         <div className={`Player PlayerPosition${index+1}`}>
                             <img src={CharacterPhoto}></img>
-                            <p>{playerName}</p>                    
+                            <p>{playerName}</p>    
+                            {playerName == PlayersTurn ? <p className="PlayersTurn">*</p>: <p></p>}              
                         </div>
                         );
                     })

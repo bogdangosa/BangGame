@@ -6,8 +6,8 @@
 }
 
 .CurentPlayerInfo{
-    display:flex;
-    justify-content: space-around;
+    display: flex;
+    justify-content: left;
     align-items: center;
     position: absolute;
     bottom: 0;
@@ -26,6 +26,16 @@
     object-fit: cover;
     left:5%;
     top:-25%;
+}
+.CurentPlayerNameRoleContainer{
+    margin-left: 30%;
+}
+.CurentPlayerNameRoleContainer p{
+    padding: 0.3rem;
+}
+
+.CurentPlayersTurn{
+    font-size: 3rem;
 }
 
 .RollDiceButton{

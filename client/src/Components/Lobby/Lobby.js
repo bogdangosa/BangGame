@@ -75,7 +75,7 @@ const Lobby = (props)=> {
                 }
 
             </div>
-            <Button Text="Ready" className={ReadyState ? "ReadyButton  ReadyButtonSelected": "ReadyButton"} onClick={()=>PlayerReady()}/>
+            <Button Text="Ready" className={"ReadyButton"} onClick={()=>PlayerReady()} Selected={ReadyState} />
         </div>
     )
 }

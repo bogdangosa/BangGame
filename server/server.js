@@ -67,14 +67,16 @@ io.on('connection',socket=>{
       let cRoom = RoomArray.find(sRoom => sRoom.RoomId == RoomName); 
       cRoom.PlayersReady++;
 
+
       if(cRoom.PlayersReady == cRoom.PlayersArray.length && cRoom.PlayersReady>=3){
+
         cRoom.PlayersArray = lib.startOfGame(cRoom.PlayersArray);
 
         cRoom.PlayerToRollID = cRoom.PlayersArray[0].getId();
         
         io.to(cRoom.RoomId).emit('GameStarted');
         cRoom.PlayersArray.forEach(Player=>{
-          io.to(Player.getId()).emit('sendStartingData',{role:Player.getRole(),name:Player.getPlayer(),playersnamearray: lib.CreateNameArray(cRoom.PlayersArray)});
+          io.to(Player.getId()).emit('sendStartingData',{role:Player.getRole(),name:Player.getPlayer(),playersnamearray: lib.CreateNameArray(cRoom.PlayersArray),playersturn: cRoom.PlayersArray[0].getPlayer(),room:cRoom.RoomId});
         })
 
 
@@ -95,12 +97,16 @@ io.on('connection',socket=>{
       io.emit('RoleOfDead',PlayerRole);
     })
 
-    socket.on('nextPlayer',RoomName=>{
+    socket.on('NextPlayer',RoomName=>{
       let cRoom = RoomArray.find(sRoom=> sRoom.RoomId == RoomName); 
-
+      
       cRoom.Turn();
 
-      socket.to(RoomName).emit('PlayersTurn',cRoom.PlayerToRollID);
+
+      let PlayersTurnName = cRoom.PlayersArray.find(Player => Player.getId() == cRoom.PlayerToRollID).getPlayer();
+
+      socket.to(RoomName).emit('PlayersTurn', PlayersTurnName );
+      socket.to(socket.id).emit('PlayersTurn', PlayersTurnName );
 
     })
 

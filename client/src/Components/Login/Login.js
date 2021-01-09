@@ -43,8 +43,8 @@ const Login = (props)=>{
                 <input className="LoginInput" placeholder="Enter your name" value={Name} onChange={ChangeName}/>
                 <input className="LoginInput" placeholder="Enter room code" value={Room} onChange={ChangeRoom}/>
                 <div className="LoginButtons">
-                    <Button Text="Join Game" onClick={()=>JoinGame()}/>
-                    <Button Text="Create Game" onClick={()=>CreateGame()}/>
+                    <Button Text="Join Game" onClick={()=>JoinGame()} Selected={false}/>
+                    <Button Text="Create Game" onClick={()=>CreateGame()} Selected={false}/>
                 </div>
             </form>
 
