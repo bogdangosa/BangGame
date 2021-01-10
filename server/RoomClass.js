@@ -9,6 +9,7 @@ class Room {
     Characters=["Lucky Duke","Willy The Kid","Slab The Killer","Sid Ketchum","Vulture Sam","Jourdonnais","Paul Regret","Kit Carlson","Bart Cassidy","Calamity Janet",
 "Suzy Lafayette","Rose Doolan","Pedro Ramirez","Black Jack","Jesse Jones","El Gringo"]
     DiceResult
+    NrOfThrows
     PlayerToRollID
     
 
@@ -19,6 +20,7 @@ class Room {
         this.PlayersArray = [];
         this.nrOfArrows = 9;
         //this.PlayerToRollID = this.PlayersArray[0].getId();
+        this.NrOfThrows=3;
         
     }
 

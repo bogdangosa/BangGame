@@ -137,6 +137,40 @@ function RollDice(diceStates,room,PlayerID)
     
 
 }
-module.exports={ startOfGame , CreateNameArray, PlayerEliminated,RollDice};
+
+/*
+this function takes a dice array of 5 and returns an result array of 4:
+ResultArray[0]=amount of shots the player needs to take next to him
+ResultArray[1]=amount of shots the player needs to take 2 seats away from him
+ResultArray[2]=amount of heal the player needs to give
+ResultArray[4]=amount of damage each player takes due gatling
+*/
+function DiceMeaning(DiceArray)
+{
+    let ResultArray=[0,0,0,0];
+    let NrOfGatling;
+    for(let i=0;i<DiceArray.length;i++)
+    {
+        switch(DiceArray[i])
+        {
+            case 1:
+                ResultArray[0]++;
+            break;
+            case 2:
+                ResultArray[1]++;
+            break;
+            case 5:
+                ResultArray[2]++;
+            break;
+            case 6:
+                NrOfGatling++;
+                if(NrOfGatling==3)
+                    ResultArray[3]++;
+            break;
+        }
+    }
+    return ResultArray;
+}
+module.exports={ startOfGame , CreateNameArray, PlayerEliminated,RollDice,DiceMeaning};
 
 

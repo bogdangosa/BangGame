@@ -98,7 +98,7 @@ io.on('connection',socket=>{
     })
 
     socket.on('NextPlayer',RoomName=>{
-      let cRoom = RoomArray.find(sRoom=> sRoom.RoomId == RoomName); 
+      let cRoom = RoomArray[RoomArray.findIndex(sRoom=> sRoom.RoomId == RoomName)]; 
       
       cRoom.Turn();
 
@@ -107,6 +107,24 @@ io.on('connection',socket=>{
 
       socket.to(RoomName).emit('PlayersTurn', PlayersTurnName );
       socket.to(socket.id).emit('PlayersTurn', PlayersTurnName );
+
+      //---------------------Test nu stiu daca o sa mearga
+      while(cRoom.NrOfThrows>0)
+      {
+        //now it is waiting for a request from the next player in line(PlayerTurnName from above)
+        socket.on('RollDice',DiceArray=>
+        {
+          console.log(DiceArray);
+          DiceArray=lib.RollDice(DiceArray,cRoom,socket.id);
+          console.log(DiceArray);
+          socket.to(RoomName).emit('DiceResult',DiceArray);
+          cRoomNrOfThrows--;
+        })
+      }
+      let cPlayerId=cRoom.PlayersArray[PlayersArray.findIndex(wantedPlayer=>wantedPlayer.getplayer==PlayersTurnName)]; //takes the ID of the player whose turn it is
+      socket.to(cPlayerId).emit(lib.DiceMeaning(DiceArray)); //emits to the curent player the meaning of the dice
+      cRoom.NrOfThrows=3;
+      //---------------------------------------------------
 
     })
 
