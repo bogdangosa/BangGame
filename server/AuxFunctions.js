@@ -78,6 +78,25 @@ function CreateRoleArray(PlayersArray){
     return NameArray;
 }
 
+function CreateNextPlayerArray(PlayersArray){
+    const { Jucator } = require('./JucatorClass');
+    let NextPlayerArray = [];
+    PlayersArray.forEach(Player => {
+        NextPlayerArray.push(Player.GetLeft());
+    });
+    return NextPlayerArray;
+}
+
+
+function CreateCharacterArray(PlayersArray){
+    const { Jucator } = require('./JucatorClass');
+    let CharacterArray = [];
+    PlayersArray.forEach(Player => {
+        CharacterArray.push(Player.getCharacter());
+    });
+    return CharacterArray;
+}
+
 function PlayerEliminated(id,playerArray)
 {
     let JucatorI,JucatorAux;
@@ -171,6 +190,6 @@ function DiceMeaning(DiceArray)
     }
     return ResultArray;
 }
-module.exports={ startOfGame , CreateNameArray, PlayerEliminated,RollDice,DiceMeaning};
+module.exports={ startOfGame , CreateNameArray, PlayerEliminated,RollDice,DiceMeaning , CreateNextPlayerArray , CreateCharacterArray};
 
 

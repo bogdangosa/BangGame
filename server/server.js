@@ -76,7 +76,8 @@ io.on('connection',socket=>{
         
         io.to(cRoom.RoomId).emit('GameStarted');
         cRoom.PlayersArray.forEach(Player=>{
-          io.to(Player.getId()).emit('sendStartingData',{role:Player.getRole(),name:Player.getPlayer(),playersnamearray: lib.CreateNameArray(cRoom.PlayersArray),playersturn: cRoom.PlayersArray[0].getPlayer(),room:cRoom.RoomId});
+          io.to(Player.getId()).emit('sendStartingData',{role:Player.getRole(),name:Player.getPlayer(),playersnamearray: lib.CreateNameArray(cRoom.PlayersArray) , playerscharacterarray:lib.CreateCharacterArray(cRoom.PlayersArray) ,playersturn: cRoom.PlayersArray[0].getPlayer(),room:cRoom.RoomId});
+
         })
 
 
