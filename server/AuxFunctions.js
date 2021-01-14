@@ -82,7 +82,7 @@ function CreateNextPlayerArray(PlayersArray){
     const { Jucator } = require('./JucatorClass');
     let NextPlayerArray = [];
     PlayersArray.forEach(Player => {
-        NextPlayerArray.push(Player.GetLeft());
+        NextPlayerArray.push(Player.getLeft().getPlayer());
     });
     return NextPlayerArray;
 }

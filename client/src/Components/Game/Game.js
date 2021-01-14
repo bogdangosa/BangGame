@@ -12,6 +12,7 @@ const Game = (props)=>{
     const [CharactersArray,setCharactersArray] = useState([]);
     const [DiceValues,SetDiceValues] = useState([0,0,0,0,0]);
     const [RoomId,SetRoomId]= useState('error');
+    const [PositionsIndexArray,SetPositionsIndexArray] = useState([]);
     let socket = props.socket;
 
     socket.on('sendStartingData',data=>{
@@ -22,18 +23,47 @@ const Game = (props)=>{
         let AuxPlayerArray = [];
         let AuxCharactersArray = [];
 
-        data.playersnamearray.forEach(PlayerName => {
-            if(data.name == PlayerName) return;
-            AuxPlayerArray.push(PlayerName);
-        });
-
         let cIndex = data.playersnamearray.findIndex(PlayerName => PlayerName == data.name);
+       // console.log(cIndex);
         SetCurentPlayerCharacter(data.playerscharacterarray[cIndex]);
         
-        for(let i=0;i < data.playerscharacterarray.length;i++){
-            if(i==cIndex) continue;
-            AuxCharactersArray.push(data.playerscharacterarray[i]);
+
+        let NextName = data.playersnextarray[cIndex];
+        cIndex = data.playersnamearray.findIndex(NextPlayerName=> NextPlayerName == NextName);
+        //console.log(cIndex);
+        AuxPlayerArray.push(NextName);
+        AuxCharactersArray.push(data.playerscharacterarray[cIndex]);
+
+        while(data.playersnextarray[cIndex] != data.name){
+            NextName = data.playersnextarray[cIndex];
+            cIndex = data.playersnamearray.findIndex(NextPlayerName=> NextPlayerName == NextName);
+            console.log(cIndex);
+            AuxPlayerArray.push(NextName);
+            AuxCharactersArray.push(data.playerscharacterarray[cIndex]);
         }
+
+        /*console.log("----");
+        console.log(data.playersnamearray);
+        console.log(data.playersnextarray);
+        console.log(AuxPlayerArray);*/
+
+
+        switch(data.playersnamearray.length){
+            case 3:
+                SetPositionsIndexArray([1,2]);
+                break;
+            case 4:
+                SetPositionsIndexArray([1,3,2]);
+                break;
+            case 5: 
+                SetPositionsIndexArray([4,1,3,2]);
+                break;
+            case 6:
+                SetPositionsIndexArray([4,1,3,2,5]);
+                break;
+
+        }
+
 
         setPlayersArray(AuxPlayerArray);
         setCharactersArray(AuxCharactersArray);
@@ -59,7 +89,7 @@ const Game = (props)=>{
     const NextPlayer = () =>{
         if(CurentPlayerName != PlayersTurn) return;
         socket.emit('NextPlayer',RoomId);
-        setPlayersTurn(''); //To be fixed
+        setPlayersTurn(PlayersArray[0]); //To be fixed
     }
 
 
@@ -89,10 +119,6 @@ const Game = (props)=>{
             case 'Jourdonnais':
                 return require('../CharacterImages/Jourdonnais.jpg').default
                 break; 
-
-            case 'Jourdonnais':
-                return require('../CharacterImages/Jourdonnais.jpg').default
-                break;
 
             case 'Paul Regret':
                 return require('../CharacterImages/PaulRegret.jpg').default
@@ -155,7 +181,7 @@ const Game = (props)=>{
                     PlayersArray.map((playerName,index)=>{
                         //console.log(CharactersArray[index]);
                         return(
-                        <div className={`Player PlayerPosition${index+1}`}>
+                        <div className={`Player PlayerPosition${PositionsIndexArray[index]}`} key={index}>
                             <img src={CharacterPhoto(CharactersArray[index])}></img>
                             <p>{playerName}</p>    
                             {playerName == PlayersTurn ? <p className="PlayersTurn">*</p>: <p></p>}              

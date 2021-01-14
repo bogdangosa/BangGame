@@ -76,7 +76,7 @@ io.on('connection',socket=>{
         
         io.to(cRoom.RoomId).emit('GameStarted');
         cRoom.PlayersArray.forEach(Player=>{
-          io.to(Player.getId()).emit('sendStartingData',{role:Player.getRole(),name:Player.getPlayer(),playersnamearray: lib.CreateNameArray(cRoom.PlayersArray) , playerscharacterarray:lib.CreateCharacterArray(cRoom.PlayersArray) ,playersturn: cRoom.PlayersArray[0].getPlayer(),room:cRoom.RoomId});
+          io.to(Player.getId()).emit('sendStartingData',{role:Player.getRole(),name:Player.getPlayer(),playersnamearray: lib.CreateNameArray(cRoom.PlayersArray) , playerscharacterarray:lib.CreateCharacterArray(cRoom.PlayersArray),playersnextarray:lib.CreateNextPlayerArray(cRoom.PlayersArray),playersturn: cRoom.PlayersArray[0].getPlayer(),room:cRoom.RoomId});
 
         })
 
@@ -107,10 +107,10 @@ io.on('connection',socket=>{
       let PlayersTurnName = cRoom.PlayersArray.find(Player => Player.getId() == cRoom.PlayerToRollID).getPlayer();
 
       socket.to(RoomName).emit('PlayersTurn', PlayersTurnName );
-      socket.to(socket.id).emit('PlayersTurn', PlayersTurnName );
+
 
       //---------------------Test nu stiu daca o sa mearga
-      while(cRoom.NrOfThrows>0)
+      /*while(cRoom.NrOfThrows>0)
       {
         //now it is waiting for a request from the next player in line(PlayerTurnName from above)
         socket.on('RollDice',DiceArray=>
@@ -125,7 +125,7 @@ io.on('connection',socket=>{
       let cPlayerId=cRoom.PlayersArray[PlayersArray.findIndex(wantedPlayer=>wantedPlayer.getplayer==PlayersTurnName)]; //takes the ID of the player whose turn it is
       socket.to(cPlayerId).emit(lib.DiceMeaning(DiceArray)); //emits to the curent player the meaning of the dice
       cRoom.NrOfThrows=3;
-      //---------------------------------------------------
+      //---------------------------------------------------*/
 
     })
 
