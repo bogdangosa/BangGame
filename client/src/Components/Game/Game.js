@@ -75,15 +75,23 @@ const Game = (props)=>{
     socket.on('PlayersTurn',PlayersTurnName=>{
         console.log(PlayersTurnName);
         setPlayersTurn(PlayersTurnName);
-    })
+    });
+    socket.on('DiceResult',DiceRoll=>{
+        console.log(DiceRoll);
+        SetDiceValues(DiceRoll);
+    });
 
     const RollDice = () =>{
-        console.log("dice rolled");
-        let DiceRoll = [];
+
+        if(CurentPlayerName != PlayersTurn) return;
+        
+        /*let DiceRoll = [];
         for(let i=0;i<5;i++)
             DiceRoll[i]=(Math.floor(Math.random()*6)+1);
-        SetDiceValues(DiceRoll);
-        
+        SetDiceValues(DiceRoll);*/
+
+        socket.emit('RollDice',{room:RoomId,diceArray:DiceValues});
+
     }
 
     const NextPlayer = () =>{
@@ -160,7 +168,7 @@ const Game = (props)=>{
                 
             </div>
 
-            <Button Text="Roll Dice" className="RollDiceButton" onClick={ ()=>RollDice() } Selected={false}/>
+            <Button Text="Roll Dice" className="RollDiceButton" onClick={ ()=>RollDice() } Selected={CurentPlayerName != PlayersTurn}/>
             <Button Text="Next Player" className="NextPlayerButton" onClick={ ()=>NextPlayer() } Selected={ CurentPlayerName != PlayersTurn}/>
             
 

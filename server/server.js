@@ -124,11 +124,29 @@ io.on('connection',socket=>{
       }
       let cPlayerId=cRoom.PlayersArray[PlayersArray.findIndex(wantedPlayer=>wantedPlayer.getplayer==PlayersTurnName)]; //takes the ID of the player whose turn it is
       socket.to(cPlayerId).emit(lib.DiceMeaning(DiceArray)); //emits to the curent player the meaning of the dice
-      cRoom.NrOfThrows=3;
-      //---------------------------------------------------*/
+      cRoom.NrOfThrows=3;*/
+      //---------------------------------------------------
 
     })
 
+
+    socket.on('RollDice',Data=>{
+      let cRoom = RoomArray.find(sRoom => sRoom.RoomId == Data.room);
+      let DiceArray = Data.diceArray; 
+
+      console.log(DiceArray);
+      DiceArray=lib.RollDice(DiceArray,cRoom,socket.id);
+
+      console.log(DiceArray);
+      socket.to(Data.room).emit('DiceResult',DiceArray);
+
+      cRoom.NrOfThrows--;
+      
+      if(cRoom.NrOfThrows==0){
+        cRoom.NrOfThrows=3;
+      }
+
+    })
 
     socket.on('disconnecting',reason=>{
 
