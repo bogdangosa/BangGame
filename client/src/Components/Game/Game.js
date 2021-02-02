@@ -10,7 +10,8 @@ const Game = (props)=>{
     const [PlayersTurn,setPlayersTurn] = useState('');
     const [PlayersArray,setPlayersArray] = useState([]);
     const [CharactersArray,setCharactersArray] = useState([]);
-    const [DiceValues,SetDiceValues] = useState([0,0,0,0,0]);
+    const [DiceValues,SetDiceValues] = useState([{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false}]);
+    //const [SelectedDices,SetSelectedDices] = useState([false,false,false,false,false]);
     const [RoomId,SetRoomId]= useState('error');
     const [PositionsIndexArray,SetPositionsIndexArray] = useState([]);
     let socket = props.socket;
@@ -75,29 +76,36 @@ const Game = (props)=>{
     socket.on('PlayersTurn',PlayersTurnName=>{
         console.log(PlayersTurnName);
         setPlayersTurn(PlayersTurnName);
+        SetDiceValues([{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false}]);
     });
     socket.on('DiceResult',DiceRoll=>{
         console.log(DiceRoll);
-        SetDiceValues(DiceRoll);
+        let AuxDiceArray = [];
+        DiceRoll.forEach(DiceValue => {
+            AuxDiceArray.push({value:DiceValue,selected:false});
+        });
+        SetDiceValues(AuxDiceArray);
     });
 
     const RollDice = () =>{
 
         if(CurentPlayerName != PlayersTurn) return;
         
-        /*let DiceRoll = [];
-        for(let i=0;i<5;i++)
-            DiceRoll[i]=(Math.floor(Math.random()*6)+1);
-        SetDiceValues(DiceRoll);*/
+        let AuxDiceValues = [];
+        DiceValues.forEach(DiceValue => {
+            AuxDiceValues.push(DiceValue.value);
+        });
 
-        socket.emit('RollDice',{room:RoomId,diceArray:DiceValues});
+        socket.emit('RollDice',{room:RoomId,diceArray:AuxDiceValues});
 
     }
 
     const NextPlayer = () =>{
         if(CurentPlayerName != PlayersTurn) return;
         socket.emit('NextPlayer',RoomId);
+        SetDiceValues([{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false}]);
         setPlayersTurn(PlayersArray[0]); //To be fixed
+        
     }
 
 
@@ -154,6 +162,14 @@ const Game = (props)=>{
         }
     }
 
+    const LockDice = (DiceIndex) =>{
+        //console.log(DiceIndex);
+        let AuxSelectedDices = DiceValues;
+        AuxSelectedDices[DiceIndex].selected = !AuxSelectedDices[DiceIndex].selected;
+        console.log(AuxSelectedDices);
+        SetDiceValues(AuxSelectedDices);
+    }
+
     /*()=>CharacterPhoto(CurentPlayerCharacter)*/ 
 
     return(
@@ -174,9 +190,9 @@ const Game = (props)=>{
 
             <div className="DicesContainer">
                 {
-                    DiceValues.map(DiceValue=>{
+                    DiceValues.map((DiceValue,DiceIndex)=>{
                         return(
-                            <Dice value={DiceValue}/>
+                            <Dice value={DiceValue.value} onClick={()=>LockDice(DiceIndex)} Selected={DiceValue.selected} Index={DiceIndex}/>
                         )
                     })
                 }

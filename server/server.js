@@ -138,7 +138,7 @@ io.on('connection',socket=>{
       DiceArray=lib.RollDice(DiceArray,cRoom,socket.id);
 
       console.log(DiceArray);
-      socket.to(Data.room).emit('DiceResult',DiceArray);
+      io.to(Data.room).emit('DiceResult',DiceArray);
 
       cRoom.NrOfThrows--;
       

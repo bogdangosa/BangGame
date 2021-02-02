@@ -2,8 +2,16 @@
     width: 10vh;
     height: 10vh;
     margin:1rem;
-    background-color: aliceblue;
+    background-color: #f3f3f3;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.Dice:hover{  
+    background-color: #cccccc;
+}
+
+.DiceSelected{
+    background-color: #cccccc;
 }
