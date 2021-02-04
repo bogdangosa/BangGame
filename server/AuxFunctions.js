@@ -134,11 +134,11 @@ function RollDice(diceStates,room,PlayerID)
             DiceArray[i]=Dice;
             if(Dice==4)
             {
-                (room.PlayersArray.find(Player =>Player.getId()==PlayerID)).takeDamage();
+                room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)].takeDamage();
             }
             else if(Dice==3)
             {
-                (room.PlayersArray.find(Player =>Player.getId()==PlayerID)).takeArrow();
+                room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)].takeArrow();
                 room.nrOfArrows--;
                 if(room.nrOfArrows==0)
                 {
