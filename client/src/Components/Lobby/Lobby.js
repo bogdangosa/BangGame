@@ -8,7 +8,8 @@ const Lobby = (props)=> {
     const [playersArray,SetPlayersArray] = useState([]);
     const [ReadyState,SetReadyState] = useState(false);
     const [CurentPlayersName,setCurentPlayersName]= useState('');
-    const [RoomId,SetRoomId]= useState('error');
+    const [RoomId,SetRoomId]= useState('');
+    const [IsError,SetIsError] = useState(false);
 
     let socket = props.socket;
 
@@ -22,16 +23,18 @@ const Lobby = (props)=> {
     })
 
     socket.on('StartingLobbyData',StartingLobbyData=>{
-       SetRoomId(StartingLobbyData.room);
-       let CurentPlayersArray = StartingLobbyData.curentPlayersArray;
+        if(StartingLobbyData.room == "error"){
+            SetIsError(true);
+        }
+        else{
+            SetRoomId(StartingLobbyData.room);
+            let CurentPlayersArray = StartingLobbyData.curentPlayersArray;
 
-        setCurentPlayersName(CurentPlayersArray[CurentPlayersArray.length-1]);
-        
-        SetPlayersArray(CurentPlayersArray);
-        //console.log(CurentPlayersArray);
-        //console.log(CurentPlayersName);
-        
-    })
+            setCurentPlayersName(CurentPlayersArray[CurentPlayersArray.length-1]);
+            
+            SetPlayersArray(CurentPlayersArray);
+        }
+    });
     
 
     socket.on('GameStarted',()=>{
@@ -59,23 +62,39 @@ const Lobby = (props)=> {
 
     }
 
+    const GoBack = ()=>{
+        history.push("/");
+    }
+
     return (
         <div className="Lobby">
-            <p className="LobbyCode">room code:{RoomId}</p>
-            <div className="PlayersContainer">
-                {
-                    playersArray.map((player,index)=>{
-                        return (
-                            <div className="PlayerContainer" key={index}>
-                                <img src={CharacterPhoto}></img>
-                                <p className="PlayerName">{player}</p>
-                            </div>
-                        );
-                    })
-                }
-
+            {
+            IsError?        
+            <div className="ErrorContainer">
+                <p>Sorry, the lobby you are trying to join doesn't exist</p>
+                <Button Text="Back" Selected={ReadyState} onClick={()=>GoBack()}/>
             </div>
-            <Button Text="Ready" className={"ReadyButton"} onClick={()=>PlayerReady()} Selected={ReadyState} />
+            :
+            <>
+                <p className="LobbyCode">room code:{RoomId}</p>
+                <div className="PlayersContainer">
+                    {
+                        playersArray.map((player,index)=>{
+                            return (
+                                <div className="PlayerContainer" key={index}>
+                                    <img src={CharacterPhoto}></img>
+                                    <p className="PlayerName">{player}</p>
+                                </div>
+                            );
+                        })
+                    }
+
+                </div>
+                <Button Text="Ready" className={"ReadyButton"} onClick={()=>PlayerReady()} Selected={ReadyState} />
+            </>
+
+
+        }
         </div>
     )
 }

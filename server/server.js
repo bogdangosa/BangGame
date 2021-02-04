@@ -53,14 +53,18 @@ io.on('connection',socket=>{
 
     socket.on('NewUser',(UserData)=>{
       let cRoom = RoomArray.find(sRoom=> sRoom.RoomId == UserData.room); 
-    
-      cRoom.AddPlayer(UserData.name,socket.id);
-      socket.join(cRoom.RoomId);
+      if(cRoom == null){
+        socket.emit('StartingLobbyData',{room:"error",curentPlayersArray:0});
+      }
+      else{            
+        cRoom.AddPlayer(UserData.name,socket.id);
+        socket.join(cRoom.RoomId);
 
 
-      socket.broadcast.to(cRoom.RoomId).emit('NewPlayer',UserData.name);
-      socket.emit('StartingLobbyData',{room:cRoom.RoomId,curentPlayersArray:lib.CreateNameArray(cRoom.PlayersArray)});
-        
+        socket.broadcast.to(cRoom.RoomId).emit('NewPlayer',UserData.name);
+        socket.emit('StartingLobbyData',{room:cRoom.RoomId,curentPlayersArray:lib.CreateNameArray(cRoom.PlayersArray)});  
+      }
+
     })
 
     socket.on('PlayerReady',RoomName=>{
