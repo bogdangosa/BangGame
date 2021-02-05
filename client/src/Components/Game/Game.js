@@ -93,7 +93,10 @@ const Game = (props)=>{
         
         let AuxDiceValues = [];
         DiceValues.forEach(DiceValue => {
-            AuxDiceValues.push(DiceValue.value);
+            if(DiceValue.selected)
+                AuxDiceValues.push(DiceValue.value);
+            else
+                AuxDiceValues.push(0);
         });
 
         socket.emit('RollDice',{room:RoomId,diceArray:AuxDiceValues});
