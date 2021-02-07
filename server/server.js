@@ -110,7 +110,7 @@ io.on('connection',socket=>{
 
       let PlayersTurnName = cRoom.PlayersArray.find(Player => Player.getId() == cRoom.PlayerToRollID).getPlayer();
 
-      socket.to(RoomName).emit('PlayersTurn', PlayersTurnName );
+      io.to(RoomName).emit('PlayersTurn', PlayersTurnName );
 
 
       //---------------------Test nu stiu daca o sa mearga

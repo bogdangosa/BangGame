@@ -106,8 +106,8 @@ const Game = (props)=>{
     const NextPlayer = () =>{
         if(CurentPlayerName != PlayersTurn) return;
         socket.emit('NextPlayer',RoomId);
-        SetDiceValues([{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false}]);
-        setPlayersTurn(PlayersArray[0]); //To be fixed
+        //SetDiceValues([{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false}]);
+        //setPlayersTurn(PlayersArray[0]); //To be fixed
         
     }
 
