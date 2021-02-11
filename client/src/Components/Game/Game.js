@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{ useState, useEffect } from 'react'
 import './Game.css'
 import Button from '../Button/Button'
 import Dice from '../Dice/Dice'
@@ -16,7 +16,34 @@ const Game = (props)=>{
     const [PositionsIndexArray,SetPositionsIndexArray] = useState([]);
     let socket = props.socket;
 
-    socket.on('sendStartingData',data=>{
+
+    //On Mount
+    useEffect(()=>{
+        socket.on('sendStartingData',data=>{
+            SetStartingData(data);
+            socket.removeAllListeners("sendStartingData");
+        })
+
+
+        socket.on('PlayersTurn',PlayersTurnName=>{
+            console.log(PlayersTurnName);
+            setPlayersTurn(PlayersTurnName);
+            SetDiceValues([{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false}]);
+        });
+
+        socket.on('DiceResult',DiceRoll=>{
+            console.log(DiceRoll);
+            let AuxDiceArray = [];
+            DiceRoll.forEach(DiceValue => {
+                AuxDiceArray.push({value:DiceValue,selected:false});
+            });
+            SetDiceValues(AuxDiceArray);
+        });
+        
+    },[]);
+
+
+    const SetStartingData = (data) =>{
         SetRoomId(data.room);
         SetCurentPlayerRole(data.role);
         SetCurentPlayerName(data.name);
@@ -69,23 +96,9 @@ const Game = (props)=>{
         setPlayersArray(AuxPlayerArray);
         setCharactersArray(AuxCharactersArray);
         setPlayersTurn(data.playersturn);
+    }
 
-        socket.removeAllListeners("sendStartingData");
-    })
 
-    socket.on('PlayersTurn',PlayersTurnName=>{
-        console.log(PlayersTurnName);
-        setPlayersTurn(PlayersTurnName);
-        SetDiceValues([{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false}]);
-    });
-    socket.on('DiceResult',DiceRoll=>{
-        console.log(DiceRoll);
-        let AuxDiceArray = [];
-        DiceRoll.forEach(DiceValue => {
-            AuxDiceArray.push({value:DiceValue,selected:false});
-        });
-        SetDiceValues(AuxDiceArray);
-    });
 
     const RollDice = () =>{
 
