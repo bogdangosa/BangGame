@@ -130,26 +130,43 @@ function RollDice(diceStates,room,PlayerID)
     {
         if(diceStates[i]==0)
         {
-            let Dice=(Math.floor(Math.random()*6)+1);
-            DiceArray[i]=Dice;
-            if(Dice==4)
+            if(room.DiceResult[i]==0)
             {
-                room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)].takeDamage();
-            }
-            else if(Dice==3)
-            {
-                room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)].takeArrow();
-                room.nrOfArrows--;
-                if(room.nrOfArrows==0)
+                let Dice=(Math.floor(Math.random()*6)+1);
+                DiceArray[i]=Dice;
+                if(Dice==4)
                 {
-                    room.playerArray.forEach(PlayerWithArrows)
-                        let hp=PlayerWithArrows.takeDamageFromArrows();
-                    room.nrOfArrows=9;
+                    room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)].takeDamage();
                 }
+                else if(Dice==3)
+                {
+                    room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)].takeArrow();
+                    room.nrOfArrows--;
+                    if(room.nrOfArrows==0)
+                    {
+                        room.playerArray.forEach(PlayerWithArrows)
+                            let hp=PlayerWithArrows.takeDamageFromArrows();
+                        room.nrOfArrows=9;
+                    }
+                }
+            }
+            else
+            {
+                DiceArray[i]=room.DiceResult[i];
             }
         }
         else
-            DiceArray[i]=diceStates[i];
+        {
+            if(room.DiceResult[i]==0)
+            {
+                room.DiceResult[i]=diceStates[i];
+                DiceArray[i]=diceStates[i];
+            }
+            else
+            {
+                DiceArray[i]=room.DiceResult[i];
+            }
+        }
        
     }
     return DiceArray;
@@ -164,13 +181,13 @@ ResultArray[1]=amount of shots the player needs to take 2 seats away from him
 ResultArray[2]=amount of heal the player needs to give
 ResultArray[4]=amount of damage each player takes due gatling
 */
-function DiceMeaning(DiceArray)
+function DiceMeaning(Room)
 {
     let ResultArray=[0,0,0,0];
     let NrOfGatling;
-    for(let i=0;i<DiceArray.length;i++)
+    for(let i=0;i<Room.DiceResult.length;i++)
     {
-        switch(DiceArray[i])
+        switch(Room.DiceResult[i])
         {
             case 1:
                 ResultArray[0]++;

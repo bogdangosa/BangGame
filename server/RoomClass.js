@@ -12,6 +12,7 @@ class Room {
     NrOfThrows
     PlayerToRollID
     
+    
 
     constructor(Host){
         this.host = Host;
@@ -21,6 +22,7 @@ class Room {
         this.nrOfArrows = 9;
         //this.PlayerToRollID = this.PlayersArray[0].getId();
         this.NrOfThrows=3;
+        this.DiceResult=[0,0,0,0,0]
         
     }
 
@@ -38,6 +40,8 @@ class Room {
     Turn()
     {
         this.PlayerToRollID = this.PlayersArray[this.PlayersArray.findIndex(Player=>Player.getId()==this.PlayerToRollID)].getLeft().getId();
+        this.DiceResult=[0,0,0,0,0]
+        this.NrOfThrows=3;
     }
     
 

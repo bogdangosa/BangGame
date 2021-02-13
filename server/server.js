@@ -135,19 +135,22 @@ io.on('connection',socket=>{
 
 
     socket.on('RollDice',Data=>{
-      let cRoom = RoomArray.find(sRoom => sRoom.RoomId == Data.room);
-      let DiceArray = Data.diceArray; 
+      let cRoom = RoomArray[RoomArray.findIndex(sRoom => sRoom.RoomId == Data.room)];
+      let DiceArray = Data.diceArray;
+      let DiceMeaning=[7,7,7,7] 
 
-      if(cRoom.NrOfThrows==0){
-        cRoom.NrOfThrows=3;
+      if(cRoom.nrOfThrows==0){
+        
+        DiceMeaning=lib.DiceMeaning(cRoom)
+        io.to(Data.room).emit('DiceResult',{result:cRoom.DiceResult,meaning:DiceMeaning});
       }
       else
       {
         console.log(DiceArray);
         DiceArray=lib.RollDice(DiceArray,cRoom,socket.id);
         console.log(DiceArray);
-        io.to(Data.room).emit('DiceResult',DiceArray);
-        cRoom.NrOfThrows--;
+        io.to(Data.room).emit('DiceResult',{result:DiceArray,meaning:DiceMeaning});
+        cRoom.nrOfThrows--;
       }
       
       

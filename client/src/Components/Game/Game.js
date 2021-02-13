@@ -16,35 +16,35 @@ const Game = (props)=>{
     const [PositionsIndexArray,SetPositionsIndexArray] = useState([]);
     let socket = props.socket;
 
-
-    //On Mount
-    useEffect(()=>{
-        socket.on('sendStartingData',data=>{
-            SetStartingData(data);
-            socket.removeAllListeners("sendStartingData");
-        })
-
-
-        socket.on('PlayersTurn',PlayersTurnName=>{
-            console.log(PlayersTurnName);
-            setPlayersTurn(PlayersTurnName);
-            SetDiceValues([{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false}]);
-        });
-
-        socket.on('DiceResult',DiceRoll=>{
-            console.log(DiceRoll);
-            let AuxDiceArray = [];
-            DiceRoll.forEach(DiceValue => {
-                AuxDiceArray.push({value:DiceValue,selected:false});
+    
+            //On Mount
+          useEffect(()=>{
+            socket.on('sendStartingData',data=>{
+                SetStartingData(data);
+                socket.removeAllListeners("sendStartingData");
+            })
+    
+    
+            socket.on('PlayersTurn',PlayersTurnName=>{
+                console.log(PlayersTurnName);
+                setPlayersTurn(PlayersTurnName);
+                SetDiceValues([{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false}]);
             });
-            SetDiceValues(AuxDiceArray);
-        });
-        
-    },[]);
-
-
+    
+            socket.on('DiceResult',DiceRoll=>{
+                console.log(DiceRoll);
+                let AuxDiceArray = [];
+                DiceRoll.result.forEach(DiceValue => {
+                    AuxDiceArray.push({value:DiceValue,selected:false});
+                });
+                SetDiceValues(AuxDiceArray);
+            });
+            
+        },[]);
+    
+    
     const SetStartingData = (data) =>{
-        SetRoomId(data.room);
+        SetRoomId(data.room);  
         SetCurentPlayerRole(data.role);
         SetCurentPlayerName(data.name);
 
@@ -208,7 +208,7 @@ const Game = (props)=>{
                 {
                     DiceValues.map((DiceValue,DiceIndex)=>{
                         return(
-                            <Dice value={DiceValue.value} onClick={()=>LockDice(DiceIndex)} Selected={DiceValue.selected} Index={DiceIndex}/>
+                            <Dice value={DiceValue.value}  onClick={()=>LockDice(DiceIndex)} Selected={DiceValue.selected} Index={DiceIndex}/>
                         )
                     })
                 }
