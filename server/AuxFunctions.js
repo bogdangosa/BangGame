@@ -144,8 +144,9 @@ function RollDice(diceStates,room,PlayerID)
                     room.nrOfArrows--;
                     if(room.nrOfArrows==0)
                     {
-                        room.playerArray.forEach(PlayerWithArrows)
+                        room.PlayersArray.forEach(PlayerWithArrows=>{
                             let hp=PlayerWithArrows.takeDamageFromArrows();
+                        })
                         room.nrOfArrows=9;
                     }
                 }
