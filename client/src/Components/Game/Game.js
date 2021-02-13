@@ -8,52 +8,64 @@ const Game = (props)=>{
     const [CurentPlayerName,SetCurentPlayerName] = useState('');
     const [CurentPlayerCharacter,SetCurentPlayerCharacter] = useState('');
     const [PlayersTurn,setPlayersTurn] = useState('');
+    const [CurentPlayerHP,setCurentPlayerHP] =useState(0);
+
     const [PlayersArray,setPlayersArray] = useState([]);
     const [CharactersArray,setCharactersArray] = useState([]);
-    const [DiceValues,SetDiceValues] = useState([{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false}]);
-    //const [SelectedDices,SetSelectedDices] = useState([false,false,false,false,false]);
-    const [RoomId,SetRoomId]= useState('error');
+    const [HPArray,setHPArray] = useState([]);
     const [PositionsIndexArray,SetPositionsIndexArray] = useState([]);
+
+    const [DiceValues,SetDiceValues] = useState([0,0,0,0,0]);
+    const [SelectedDices,SetSelectedDices] = useState([false,false,false,false,false]);
+
+    const [RoomId,SetRoomId]= useState('error');
+
+    const[ActionState,setActionState] = useState(false);
+
     let socket = props.socket;
 
-    
-            //On Mount
-          useEffect(()=>{
-            socket.on('sendStartingData',data=>{
-                SetStartingData(data);
-                socket.removeAllListeners("sendStartingData");
-            })
-    
-    
-            socket.on('PlayersTurn',PlayersTurnName=>{
-                console.log(PlayersTurnName);
-                setPlayersTurn(PlayersTurnName);
-                SetDiceValues([{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false},{value:0,selected:false}]);
+
+    //On Mount
+    useEffect(()=>{
+        socket.on('sendStartingData',data=>{
+            SetStartingData(data);
+            socket.removeAllListeners("sendStartingData");
+        })
+
+
+        socket.on('PlayersTurn',PlayersTurnName=>{
+            console.log(PlayersTurnName);
+            setPlayersTurn(PlayersTurnName);
+            SetDiceValues([0,0,0,0,0]);
+            SetSelectedDices([false,false,false,false,false]);
+            setActionState(false);
+        });
+
+        socket.on('DiceResult',DiceRoll=>{
+            console.log(DiceRoll);
+            let AuxDiceArray = [];
+            DiceRoll.result.forEach(DiceValue => {
+                AuxDiceArray.push(DiceValue);
             });
-    
-            socket.on('DiceResult',DiceRoll=>{
-                console.log(DiceRoll);
-                let AuxDiceArray = [];
-                DiceRoll.result.forEach(DiceValue => {
-                    AuxDiceArray.push({value:DiceValue,selected:false});
-                });
-                SetDiceValues(AuxDiceArray);
-            });
-            
-        },[]);
-    
-    
+            SetDiceValues(AuxDiceArray);
+        });
+        
+    },[]);
+
+
     const SetStartingData = (data) =>{
-        SetRoomId(data.room);  
+        SetRoomId(data.room);
         SetCurentPlayerRole(data.role);
         SetCurentPlayerName(data.name);
 
         let AuxPlayerArray = [];
         let AuxCharactersArray = [];
+        let AuxHpArray = [];
 
         let cIndex = data.playersnamearray.findIndex(PlayerName => PlayerName == data.name);
        // console.log(cIndex);
         SetCurentPlayerCharacter(data.playerscharacterarray[cIndex]);
+        setCurentPlayerHP(data.playersHPArray[cIndex]);
         
 
         let NextName = data.playersnextarray[cIndex];
@@ -61,13 +73,16 @@ const Game = (props)=>{
         //console.log(cIndex);
         AuxPlayerArray.push(NextName);
         AuxCharactersArray.push(data.playerscharacterarray[cIndex]);
+        AuxHpArray.push(data.playersHPArray[cIndex]);
 
         while(data.playersnextarray[cIndex] != data.name){
             NextName = data.playersnextarray[cIndex];
             cIndex = data.playersnamearray.findIndex(NextPlayerName=> NextPlayerName == NextName);
             console.log(cIndex);
+
             AuxPlayerArray.push(NextName);
             AuxCharactersArray.push(data.playerscharacterarray[cIndex]);
+            AuxHpArray.push(data.playersHPArray[cIndex]);
         }
 
         /*console.log("----");
@@ -95,6 +110,7 @@ const Game = (props)=>{
 
         setPlayersArray(AuxPlayerArray);
         setCharactersArray(AuxCharactersArray);
+        setHPArray(AuxHpArray);
         setPlayersTurn(data.playersturn);
     }
 
@@ -105,9 +121,9 @@ const Game = (props)=>{
         if(CurentPlayerName != PlayersTurn) return;
         
         let AuxDiceValues = [];
-        DiceValues.forEach(DiceValue => {
-            if(DiceValue.selected)
-                AuxDiceValues.push(DiceValue.value);
+        DiceValues.forEach( (DiceValue,Index) => {
+            if(SelectedDices[Index])
+                AuxDiceValues.push(DiceValue);
             else
                 AuxDiceValues.push(0);
         });
@@ -179,14 +195,24 @@ const Game = (props)=>{
     }
 
     const LockDice = (DiceIndex) =>{
-        //console.log(DiceIndex);
-        let AuxSelectedDices = DiceValues;
-        AuxSelectedDices[DiceIndex].selected = !AuxSelectedDices[DiceIndex].selected;
+        if(CurentPlayerName != PlayersTurn)return;
+        let AuxSelectedDices = [];
+        
+        SelectedDices.forEach((SelectedDice,index)=>{
+            if(index==DiceIndex)
+                AuxSelectedDices.push(!SelectedDice);
+            else
+                AuxSelectedDices.push(SelectedDice);
+        })
+        
         console.log(AuxSelectedDices);
-        SetDiceValues(AuxSelectedDices);
-    }
 
-    /*()=>CharacterPhoto(CurentPlayerCharacter)*/ 
+        SetSelectedDices(AuxSelectedDices);
+     }
+
+    const LockAllDices = () =>{
+        setActionState(true);
+    }
 
     return(
         <div className="Game">
@@ -196,6 +222,7 @@ const Game = (props)=>{
                     <p className="CurentPlayerName">{CurentPlayerName}</p>
                     <p className="CurentPlayerRole">{CurentPlayerRole}</p>
                 </div>
+                <p className="CurentPlayerHP">HP: {CurentPlayerHP}</p>
                 {CurentPlayerName == PlayersTurn ? <p className="CurentPlayersTurn">*</p>: <p></p>}  
                 
             </div>
@@ -205,14 +232,23 @@ const Game = (props)=>{
             
 
             <div className="DicesContainer">
-                {
+                <Dice value={DiceValues[0]} onClick={()=>LockDice(0)} Selected={SelectedDices[0]} Index={0}/>
+                <Dice value={DiceValues[1]} onClick={()=>LockDice(1)} Selected={SelectedDices[1]} Index={1}/>
+                <Dice value={DiceValues[2]} onClick={()=>LockDice(2)} Selected={SelectedDices[2]} Index={2}/>
+                <Dice value={DiceValues[3]} onClick={()=>LockDice(3)} Selected={SelectedDices[3]} Index={3}/>
+                <Dice value={DiceValues[4]} onClick={()=>LockDice(4)} Selected={SelectedDices[4]} Index={4}/>
+                
+                {/*
                     DiceValues.map((DiceValue,DiceIndex)=>{
                         return(
-                            <Dice value={DiceValue.value}  onClick={()=>LockDice(DiceIndex)} Selected={DiceValue.selected} Index={DiceIndex}/>
+                            <Dice value={DiceValue.value} onClick={()=>LockDice(DiceIndex)} Selected={DiceValue.selected} Index={DiceIndex}/>
                         )
-                    })
+                    })*/
                 }
             </div>
+
+            {CurentPlayerName == PlayersTurn ?  <Button Text="Lock Dices" className="LockDicesButton" onClick={ ()=>LockAllDices() } Selected={false}/>
+            : <div></div>}
             
 
             <div className="GamePlayersContainer">
@@ -224,7 +260,10 @@ const Game = (props)=>{
                         <div className={`Player PlayerPosition${PositionsIndexArray[index]}`} key={index}>
                             <img src={CharacterPhoto(CharactersArray[index])}></img>
                             <p>{playerName}</p>    
-                            {playerName == PlayersTurn ? <p className="PlayersTurn">*</p>: <p></p>}              
+                            <p className="HP">HP:{HPArray[index]}</p> 
+                            {playerName == PlayersTurn ? <p className="PlayersTurn">*</p>: <p></p>} 
+
+                            {ActionState ? <p className="HealButton">Heal</p> : <></> }
                         </div>
                         );
                     })

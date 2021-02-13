@@ -111,3 +111,22 @@
     top:25%;
 }
 
+
+.LockDicesButton{
+    position: absolute;
+    top: 65%;
+    left:50%;
+    transform: translate(-50%,-50%);
+}
+
+.HealButton{
+    padding: 0.2rem;
+    background-color: #fffffb;
+    border-radius: 1rem;
+    margin-top: 0.3rem;
+    cursor: pointer;
+    transition: 0.5s ease;
+}
+.HealButton:hover{
+    background-color: #ade8ff;
+}

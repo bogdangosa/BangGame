@@ -97,6 +97,15 @@ function CreateCharacterArray(PlayersArray){
     return CharacterArray;
 }
 
+function CreateHPArray(PlayersArray){
+    const { Jucator } = require('./JucatorClass');
+    let HPArray = [];
+    PlayersArray.forEach(Player => {
+        HPArray.push(Player.getHp());
+    });
+    return HPArray;
+}
+
 function PlayerEliminated(id,playerArray)
 {
     let JucatorI,JucatorAux;
@@ -208,6 +217,6 @@ function DiceMeaning(Room)
     }
     return ResultArray;
 }
-module.exports={ startOfGame , CreateNameArray, PlayerEliminated,RollDice,DiceMeaning , CreateNextPlayerArray , CreateCharacterArray};
+module.exports={ startOfGame , CreateNameArray, PlayerEliminated,RollDice,DiceMeaning , CreateNextPlayerArray , CreateCharacterArray , CreateHPArray};
 
 
