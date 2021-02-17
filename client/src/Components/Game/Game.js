@@ -4,6 +4,7 @@ import Button from '../Button/Button'
 import Dice from '../Dice/Dice'
 
 const Game = (props)=>{
+    const [ThrowsRemaining,SetThrowsRemaining] = useState('');
     const [CurentPlayerRole,SetCurentPlayerRole] = useState('');
     const [CurentPlayerName,SetCurentPlayerName] = useState('');
     const [CurentPlayerCharacter,SetCurentPlayerCharacter] = useState('');
@@ -33,16 +34,19 @@ const Game = (props)=>{
         })
 
 
-        socket.on('PlayersTurn',PlayersTurnName=>{
+        socket.on('PlayersTurn',data=>{
+            let PlayersTurnName = data.playersturnname;
             console.log(PlayersTurnName);
             setPlayersTurn(PlayersTurnName);
             SetDiceValues([0,0,0,0,0]);
             SetSelectedDices([false,false,false,false,false]);
+            SetThrowsRemaining(data.throwsremaining);
             setActionState(false);
         });
 
         socket.on('DiceResult',DiceRoll=>{
             console.log(DiceRoll);
+            SetThrowsRemaining(DiceRoll.throwsremaining);
             let AuxDiceArray = [];
             DiceRoll.result.forEach(DiceValue => {
                 AuxDiceArray.push(DiceValue);
@@ -57,6 +61,7 @@ const Game = (props)=>{
         SetRoomId(data.room);
         SetCurentPlayerRole(data.role);
         SetCurentPlayerName(data.name);
+        SetThrowsRemaining(data.throwsremaining);
 
         let AuxPlayerArray = [];
         let AuxCharactersArray = [];
@@ -227,9 +232,10 @@ const Game = (props)=>{
                 
             </div>
 
-            <Button Text="Roll Dice" className="RollDiceButton" onClick={ ()=>RollDice() } Selected={CurentPlayerName != PlayersTurn}/>
+            <Button Text="Roll Dice" className="RollDiceButton" onClick={ ()=>RollDice() } Selected={CurentPlayerName != PlayersTurn || ThrowsRemaining == 0}/>
             <Button Text="Next Player" className="NextPlayerButton" onClick={ ()=>NextPlayer() } Selected={ CurentPlayerName != PlayersTurn}/>
             
+            <p className="ThrowsRemaining">Throws Remaining: {ThrowsRemaining}</p>
 
             <div className="DicesContainer">
                 <Dice value={DiceValues[0]} onClick={()=>LockDice(0)} Selected={SelectedDices[0]} Index={0}/>

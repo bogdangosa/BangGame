@@ -66,6 +66,13 @@ const Lobby = (props)=> {
         history.push("/");
     }
 
+    const LeaveRoom =() =>{
+        socket.emit('LeaveRoom',RoomId);
+        history.push("/");
+    }
+
+
+
     return (
         <div className="Lobby">
             {
@@ -90,7 +97,10 @@ const Lobby = (props)=> {
                     }
 
                 </div>
-                <Button Text="Ready" className={"ReadyButton"} onClick={()=>PlayerReady()} Selected={ReadyState} />
+                <div className="LobbyButons">
+                    <Button Text="Leave" className={"LeaveButton"} onClick={()=>LeaveRoom()} Selected={false} />   
+                    <Button Text="Ready" className={"ReadyButton"} onClick={()=>PlayerReady()} Selected={ReadyState} />
+                </div>
             </>
 
 

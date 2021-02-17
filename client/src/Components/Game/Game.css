@@ -111,6 +111,14 @@
     top:25%;
 }
 
+.ThrowsRemaining{
+    
+    font-size: 1.5rem;
+    position: absolute;
+    top: 35%;
+    left:50%;
+    transform: translate(-50%,-50%); 
+}
 
 .LockDicesButton{
     position: absolute;
@@ -118,6 +126,7 @@
     left:50%;
     transform: translate(-50%,-50%);
 }
+
 
 .HealButton{
     padding: 0.2rem;

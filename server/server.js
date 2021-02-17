@@ -80,7 +80,16 @@ io.on('connection',socket=>{
         
         io.to(cRoom.RoomId).emit('GameStarted');
         cRoom.PlayersArray.forEach(Player=>{
-          io.to(Player.getId()).emit('sendStartingData',{role:Player.getRole(),name:Player.getPlayer(),playersnamearray: lib.CreateNameArray(cRoom.PlayersArray) , playerscharacterarray:lib.CreateCharacterArray(cRoom.PlayersArray),playersnextarray:lib.CreateNextPlayerArray(cRoom.PlayersArray),playersturn: cRoom.PlayersArray[0].getPlayer(),room:cRoom.RoomId,playersHPArray: lib.CreateHPArray(cRoom.PlayersArray)});
+          io.to(Player.getId()).emit('sendStartingData',{
+            role:Player.getRole(),
+            name:Player.getPlayer(),
+            playersnamearray: lib.CreateNameArray(cRoom.PlayersArray),
+            playerscharacterarray:lib.CreateCharacterArray(cRoom.PlayersArray),
+            playersnextarray:lib.CreateNextPlayerArray(cRoom.PlayersArray),
+            playersturn: cRoom.PlayersArray[0].getPlayer(),
+            room:cRoom.RoomId,
+            playersHPArray: lib.CreateHPArray(cRoom.PlayersArray),
+            throwsremaining: cRoom.NrOfThrows});
 
         })
 
@@ -110,7 +119,7 @@ io.on('connection',socket=>{
 
       let PlayersTurnName = cRoom.PlayersArray.find(Player => Player.getId() == cRoom.PlayerToRollID).getPlayer();
 
-      io.to(RoomName).emit('PlayersTurn', PlayersTurnName );
+      io.to(RoomName).emit('PlayersTurn', {playersturnname:PlayersTurnName,throwsremaining:cRoom.NrOfThrows} );
 
 
       //---------------------Test nu stiu daca o sa mearga
@@ -142,18 +151,29 @@ io.on('connection',socket=>{
       if(cRoom.nrOfThrows==0){
         
         DiceMeaning=lib.DiceMeaning(cRoom)
-        io.to(Data.room).emit('DiceResult',{result:cRoom.DiceResult,meaning:DiceMeaning});
+        io.to(Data.room).emit('DiceResult',{result:cRoom.DiceResult,meaning:DiceMeaning,throwsremaining:cRoom.NrOfThrows});
       }
       else
       {
         console.log(DiceArray);
         DiceArray=lib.RollDice(DiceArray,cRoom,socket.id);
         console.log(DiceArray);
-        io.to(Data.room).emit('DiceResult',{result:DiceArray,meaning:DiceMeaning});
-        cRoom.nrOfThrows--;
+        cRoom.NrOfThrows--;
+        console.log(cRoom.NrOfThrows);
+        io.to(Data.room).emit('DiceResult',{result:DiceArray,meaning:DiceMeaning,throwsremaining:cRoom.NrOfThrows});
       }
       
       
+
+    })
+
+    socket.on('LeaveRoom',RoomName=>{
+      let cRoom = RoomArray[RoomArray.findIndex(sRoom=> sRoom.RoomId == RoomName)]; 
+
+      cRoom.PlayersArray = lib.PlayerEliminated(socket.id , cRoom.PlayersArray);
+
+      socket.leave(RoomName);
+      socket.to(RoomName).emit( 'UserLeft' , lib.CreateNameArray(cRoom.PlayersArray) );
 
     })
 
