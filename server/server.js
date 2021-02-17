@@ -179,7 +179,10 @@ io.on('connection',socket=>{
 
 
     socket.on('HealDamage',data=>{
-      
+      PlayerChangedHP=data.room.PlayersArray[data.room.PlayersArray.findIndex(Player=>Player.getId.getPlayer()==data.PlayerName)];
+      PlayerChangedHP.ChangeHP(data.delta);
+      PlayersHP=lib.CreateHPArray(data.room.PlayersArray);
+      io.to(data.room).emit('PlayersUpdatedHp',PlayersHP);
       //ia damage sau da heal;
       //returneaza hp la toti
     })
