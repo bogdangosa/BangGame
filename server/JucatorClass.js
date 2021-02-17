@@ -31,23 +31,10 @@ class Jucator
     
 
     //the player takes damage equal to damageAmount
-    takeDamage(damageAmount)
+    ChangeHP(Amount)
     {
-        if(damageAmount)
-            this.#hp=this.#hp-damageAmount;    
-        else
-            this.#hp--;
-        return this.#hp;
-    }
-
-
-    //the player heals healAmount points of health
-    heal(healAmount)
-    {
-        if(healAmount)
-            this.#hp=this.#hp+healAmount;    
-        else
-            this.#hp++;
+       
+        this.#hp=this.#hp+Amount;    
         return this.#hp;
     }
 
