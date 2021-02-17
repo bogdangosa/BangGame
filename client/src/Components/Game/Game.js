@@ -219,6 +219,13 @@ const Game = (props)=>{
         setActionState(true);
     }
 
+
+    const HealDamage =(PlayerName,Delta)=>{
+        socket.emit("HealDamage",{name:PlayerName,delta:Delta,room:RoomId});
+    }
+
+
+  
     return(
         <div className="Game">
             <div className="CurentPlayerInfo">

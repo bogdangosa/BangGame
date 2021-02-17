@@ -146,7 +146,7 @@ io.on('connection',socket=>{
     socket.on('RollDice',Data=>{
       let cRoom = RoomArray[RoomArray.findIndex(sRoom => sRoom.RoomId == Data.room)];
       let DiceArray = Data.diceArray;
-      let DiceMeaning=[7,7,7,7] 
+      let DiceMeaning=[6,6,6,6,6,6] 
 
       if(cRoom.nrOfThrows==0){
         
@@ -175,6 +175,13 @@ io.on('connection',socket=>{
       socket.leave(RoomName);
       socket.to(RoomName).emit( 'UserLeft' , lib.CreateNameArray(cRoom.PlayersArray) );
 
+    })
+
+
+    socket.on('HealDamage',data=>{
+      
+      //ia damage sau da heal;
+      //returneaza hp la toti
     })
 
     socket.on('disconnecting',reason=>{
