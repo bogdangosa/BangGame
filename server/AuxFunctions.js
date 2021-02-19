@@ -145,19 +145,20 @@ function RollDice(diceStates,room,PlayerID)
                 DiceArray[i]=Dice;
                 if(Dice==4)
                 {
-                    room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)].takeDamage();
+                    //room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)].ChangeHP(-1);
+
                 }
                 else if(Dice==3)
                 {
-                    room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)].takeArrow();
+                    /*room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)].takeArrow();
                     room.nrOfArrows--;
                     if(room.nrOfArrows==0)
                     {
                         room.PlayersArray.forEach(PlayerWithArrows=>{
                             let hp=PlayerWithArrows.takeDamageFromArrows();
                         })
-                        room.nrOfArrows=9;
-                    }
+                        room.nrOfArrows=9; 
+                    }*/
                 }
             }
             else

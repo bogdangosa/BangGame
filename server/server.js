@@ -146,20 +146,18 @@ io.on('connection',socket=>{
     socket.on('RollDice',Data=>{
       let cRoom = RoomArray[RoomArray.findIndex(sRoom => sRoom.RoomId == Data.room)];
       let DiceArray = Data.diceArray;
-      let DiceMeaning=[6,6,6,6,6,6] 
-
-      if(cRoom.nrOfThrows==0){
-        
-        DiceMeaning=lib.DiceMeaning(cRoom)
+      let DiceMeaning=[6,6,6,6,6,6];
+      cRoom.NrOfThrows--;
+      console.log(cRoom.NrOfThrows);
+      if(cRoom.NrOfThrows == 0){
+        DiceArray=lib.RollDice(DiceArray,cRoom,socket.id);
+        DiceMeaning=lib.DiceMeaning(cRoom);
+        console.log(DiceMeaning);
         io.to(Data.room).emit('DiceResult',{result:cRoom.DiceResult,meaning:DiceMeaning,throwsremaining:cRoom.NrOfThrows});
       }
       else
       {
-        console.log(DiceArray);
         DiceArray=lib.RollDice(DiceArray,cRoom,socket.id);
-        console.log(DiceArray);
-        cRoom.NrOfThrows--;
-        console.log(cRoom.NrOfThrows);
         io.to(Data.room).emit('DiceResult',{result:DiceArray,meaning:DiceMeaning,throwsremaining:cRoom.NrOfThrows});
       }
       
@@ -179,9 +177,10 @@ io.on('connection',socket=>{
 
 
     socket.on('HealDamage',data=>{
-      PlayerChangedHP=data.room.PlayersArray[data.room.PlayersArray.findIndex(Player=>Player.getId.getPlayer()==data.PlayerName)];
+      let cRoom = RoomArray[RoomArray.findIndex(sRoom=> sRoom.RoomId == data.room)]; 
+      let PlayerChangedHP = cRoom.PlayersArray[cRoom.PlayersArray.findIndex(Player=>Player.getPlayer()== data.name)];
       PlayerChangedHP.ChangeHP(data.delta);
-      PlayersHP=lib.CreateHPArray(data.room.PlayersArray);
+      let PlayersHP=lib.CreateHPArray(cRoom.PlayersArray);
       io.to(data.room).emit('PlayersUpdatedHp',PlayersHP);
       //ia damage sau da heal;
       //returneaza hp la toti

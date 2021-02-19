@@ -4,6 +4,8 @@ import Button from '../Button/Button'
 import Dice from '../Dice/Dice'
 
 const Game = (props)=>{
+
+    let OriginalNameArray = [];
     const [ThrowsRemaining,SetThrowsRemaining] = useState('');
     const [CurentPlayerRole,SetCurentPlayerRole] = useState('');
     const [CurentPlayerName,SetCurentPlayerName] = useState('');
@@ -17,6 +19,7 @@ const Game = (props)=>{
     const [PositionsIndexArray,SetPositionsIndexArray] = useState([]);
 
     const [DiceValues,SetDiceValues] = useState([0,0,0,0,0]);
+    const [DiceMeaning,SetDiceMeaning] = useState([6,6,6,6,6]);
     const [SelectedDices,SetSelectedDices] = useState([false,false,false,false,false]);
 
     const [RoomId,SetRoomId]= useState('error');
@@ -47,12 +50,32 @@ const Game = (props)=>{
         socket.on('DiceResult',DiceRoll=>{
             console.log(DiceRoll);
             SetThrowsRemaining(DiceRoll.throwsremaining);
+
+            if(DiceRoll.throwsremaining==0){
+                SetDiceMeaning(DiceRoll.meaning);
+                setActionState(true);
+            }
+
             let AuxDiceArray = [];
+
             DiceRoll.result.forEach(DiceValue => {
                 AuxDiceArray.push(DiceValue);
+
             });
+
             SetDiceValues(AuxDiceArray);
         });
+
+        socket.on('PlayersUpdatedHp',PlayersHP=>{
+            console.log(PlayersHP);
+
+            let cIndex = OriginalNameArray.findIndex(PlayerName => PlayerName == CurentPlayerName);
+            console.log(OriginalNameArray);
+            console.log(cIndex);
+            setCurentPlayerHP(PlayersHP[cIndex]);
+
+            //setHPArray(PlayersHP);
+        })
         
     },[]);
 
@@ -62,6 +85,7 @@ const Game = (props)=>{
         SetCurentPlayerRole(data.role);
         SetCurentPlayerName(data.name);
         SetThrowsRemaining(data.throwsremaining);
+        OriginalNameArray = data.playersnamearray.slice();
 
         let AuxPlayerArray = [];
         let AuxCharactersArray = [];
@@ -123,7 +147,13 @@ const Game = (props)=>{
 
     const RollDice = () =>{
 
-        if(CurentPlayerName != PlayersTurn) return;
+        if(CurentPlayerName != PlayersTurn || ThrowsRemaining == 0) return;
+
+        if(ThrowsRemaining == 1){
+            socket.emit('RollDice',{room:RoomId,diceArray:DiceValues});
+            return;
+        }
+
         
         let AuxDiceValues = [];
         DiceValues.forEach( (DiceValue,Index) => {
@@ -132,6 +162,8 @@ const Game = (props)=>{
             else
                 AuxDiceValues.push(0);
         });
+
+        
 
         socket.emit('RollDice',{room:RoomId,diceArray:AuxDiceValues});
 
@@ -222,6 +254,11 @@ const Game = (props)=>{
 
     const HealDamage =(PlayerName,Delta)=>{
         socket.emit("HealDamage",{name:PlayerName,delta:Delta,room:RoomId});
+        if(Delta == 1){
+            let AuxDiceMeaning = DiceMeaning;
+            AuxDiceMeaning[4]--;
+            SetDiceMeaning(AuxDiceMeaning);
+        }
     }
 
 
@@ -276,7 +313,7 @@ const Game = (props)=>{
                             <p className="HP">HP:{HPArray[index]}</p> 
                             {playerName == PlayersTurn ? <p className="PlayersTurn">*</p>: <p></p>} 
 
-                            {ActionState ? <p className="HealButton">Heal</p> : <></> }
+                            { (ActionState && DiceMeaning[4]>0) ? <p className="HealButton" onClick={()=>HealDamage(playerName,1)}>Heal</p> : <></> }
                         </div>
                         );
                     })
