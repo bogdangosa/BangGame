@@ -39,9 +39,12 @@ class Room {
 
     Turn()
     {
+        if(this.PlayersArray[this.PlayersArray.findIndex(Player=>Player.getId()==this.PlayerToRollID)].getLeft().getCharacter()=="Lucky Duke")
+            this.NrOfThrows=4
+        else
+            this.NrOfThrows=3;
         this.PlayerToRollID = this.PlayersArray[this.PlayersArray.findIndex(Player=>Player.getId()==this.PlayerToRollID)].getLeft().getId();
-        this.DiceResult=[0,0,0,0,0]
-        this.NrOfThrows=3;
+        this.DiceResult=[0,0,0,0,0]    
     }
     
 
