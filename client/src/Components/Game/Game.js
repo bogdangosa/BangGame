@@ -147,12 +147,13 @@ const Game = (props)=>{
 
     const RollDice = () =>{
 
+        if(ThrowsRemaining == 0){
+            setActionState(true);
+        }
+        
         if(CurentPlayerName != PlayersTurn || ThrowsRemaining == 0) return;
 
-        if(ThrowsRemaining == 1){
-            socket.emit('RollDice',{room:RoomId,diceArray:DiceValues});
-            return;
-        }
+        
 
         
         let AuxDiceValues = [];
@@ -166,6 +167,10 @@ const Game = (props)=>{
         
 
         socket.emit('RollDice',{room:RoomId,diceArray:AuxDiceValues});
+
+        if(ThrowsRemaining == 0){
+            setActionState(true);
+        }
 
     }
 
@@ -249,11 +254,13 @@ const Game = (props)=>{
 
     const LockAllDices = () =>{
         setActionState(true);
+        socket.emit('RollDice',{room:RoomId,diceArray:DiceValues});
     }
 
 
     const HealDamage =(PlayerName,Delta)=>{
         socket.emit("HealDamage",{name:PlayerName,delta:Delta,room:RoomId});
+        
         if(Delta == 1){
             let AuxDiceMeaning = DiceMeaning;
             AuxDiceMeaning[4]--;
@@ -312,8 +319,8 @@ const Game = (props)=>{
                             <p>{playerName}</p>    
                             <p className="HP">HP:{HPArray[index]}</p> 
                             {playerName == PlayersTurn ? <p className="PlayersTurn">*</p>: <p></p>} 
-
                             { (ActionState && DiceMeaning[4]>0) ? <p className="HealButton" onClick={()=>HealDamage(playerName,1)}>Heal</p> : <></> }
+                            
                         </div>
                         );
                     })

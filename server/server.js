@@ -152,11 +152,13 @@ io.on('connection',socket=>{
       if(cRoom.NrOfThrows == 0){
         DiceArray=lib.RollDice(DiceArray,cRoom,socket.id);
         DiceMeaning=lib.DiceMeaning(cRoom);
+        console.log(cRoom.DiceResult);//
         console.log(DiceMeaning);
-        io.to(Data.room).emit('DiceResult',{result:cRoom.DiceResult,meaning:DiceMeaning,throwsremaining:cRoom.NrOfThrows});
+        io.to(Data.room).emit('DiceResult',{result:DiceArray,meaning:DiceMeaning,throwsremaining:cRoom.NrOfThrows});
       }
       else
       {
+        console.log(cRoom.DiceResult);//
         DiceArray=lib.RollDice(DiceArray,cRoom,socket.id);
         io.to(Data.room).emit('DiceResult',{result:DiceArray,meaning:DiceMeaning,throwsremaining:cRoom.NrOfThrows});
       }
