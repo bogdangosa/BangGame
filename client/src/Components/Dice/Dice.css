@@ -1,8 +1,8 @@
 .Dice{
-    width: 10vh;
-    height: 10vh;
+    width: 13vh;
+    height: 13vh;
     margin:1rem;
-    background-color: #f3f3f3;
+    background-color: #cacaca;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,5 +14,5 @@
 }
 
 .DiceSelected{
-    background-color: #cccccc;
+    background-color: #979797;
 }

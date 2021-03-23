@@ -4,8 +4,6 @@ import Button from '../Button/Button'
 import Dice from '../Dice/Dice'
 
 const Game = (props)=>{
-
-    let OriginalNameArray = [];
     const [ThrowsRemaining,SetThrowsRemaining] = useState('');
     const [CurentPlayerRole,SetCurentPlayerRole] = useState('');
     const [CurentPlayerName,SetCurentPlayerName] = useState('');
@@ -67,14 +65,7 @@ const Game = (props)=>{
         });
 
         socket.on('PlayersUpdatedHp',PlayersHP=>{
-            console.log(PlayersHP);
-
-            let cIndex = OriginalNameArray.findIndex(PlayerName => PlayerName == CurentPlayerName);
-            console.log(OriginalNameArray);
-            console.log(cIndex);
-            setCurentPlayerHP(PlayersHP[cIndex]);
-
-            //setHPArray(PlayersHP);
+            setHPArray(PlayersHP);
         })
         
     },[]);
@@ -85,61 +76,12 @@ const Game = (props)=>{
         SetCurentPlayerRole(data.role);
         SetCurentPlayerName(data.name);
         SetThrowsRemaining(data.throwsremaining);
-        OriginalNameArray = data.playersnamearray.slice();
-
-        let AuxPlayerArray = [];
-        let AuxCharactersArray = [];
-        let AuxHpArray = [];
-
         let cIndex = data.playersnamearray.findIndex(PlayerName => PlayerName == data.name);
-       // console.log(cIndex);
         SetCurentPlayerCharacter(data.playerscharacterarray[cIndex]);
         setCurentPlayerHP(data.playersHPArray[cIndex]);
-        
-
-        let NextName = data.playersnextarray[cIndex];
-        cIndex = data.playersnamearray.findIndex(NextPlayerName=> NextPlayerName == NextName);
-        //console.log(cIndex);
-        AuxPlayerArray.push(NextName);
-        AuxCharactersArray.push(data.playerscharacterarray[cIndex]);
-        AuxHpArray.push(data.playersHPArray[cIndex]);
-
-        while(data.playersnextarray[cIndex] != data.name){
-            NextName = data.playersnextarray[cIndex];
-            cIndex = data.playersnamearray.findIndex(NextPlayerName=> NextPlayerName == NextName);
-            console.log(cIndex);
-
-            AuxPlayerArray.push(NextName);
-            AuxCharactersArray.push(data.playerscharacterarray[cIndex]);
-            AuxHpArray.push(data.playersHPArray[cIndex]);
-        }
-
-        /*console.log("----");
-        console.log(data.playersnamearray);
-        console.log(data.playersnextarray);
-        console.log(AuxPlayerArray);*/
-
-
-        switch(data.playersnamearray.length){
-            case 3:
-                SetPositionsIndexArray([1,2]);
-                break;
-            case 4:
-                SetPositionsIndexArray([1,3,2]);
-                break;
-            case 5: 
-                SetPositionsIndexArray([4,1,3,2]);
-                break;
-            case 6:
-                SetPositionsIndexArray([4,1,3,2,5]);
-                break;
-
-        }
-
-
-        setPlayersArray(AuxPlayerArray);
-        setCharactersArray(AuxCharactersArray);
-        setHPArray(AuxHpArray);
+        setPlayersArray(data.playersnamearray);
+        setCharactersArray(data.playerscharacterarray);
+        setHPArray(data.playersHPArray);
         setPlayersTurn(data.playersturn);
     }
 
@@ -314,11 +256,10 @@ const Game = (props)=>{
                     PlayersArray.map((playerName,index)=>{
                         //console.log(CharactersArray[index]);
                         return(
-                        <div className={`Player PlayerPosition${PositionsIndexArray[index]}`} key={index}>
+                        <div className="Player" key={index}>
                             <img src={CharacterPhoto(CharactersArray[index])}></img>
-                            <p>{playerName}</p>    
+                            <p className={playerName == PlayersTurn ? "Bold":""}>{playerName}</p>    
                             <p className="HP">HP:{HPArray[index]}</p> 
-                            {playerName == PlayersTurn ? <p className="PlayersTurn">*</p>: <p></p>} 
                             { (ActionState && DiceMeaning[4]>0) ? <p className="HealButton" onClick={()=>HealDamage(playerName,1)}>Heal</p> : <></> }
                             
                         </div>
