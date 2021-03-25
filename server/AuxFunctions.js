@@ -224,6 +224,55 @@ function DiceMeaning(Room)
     }
     return ResultArray;
 }
-module.exports={ startOfGame , CreateNameArray, PlayerEliminated,RollDice,DiceMeaning , CreateNextPlayerArray , CreateCharacterArray , CreateHPArray};
+
+function IsGameOver(Room)
+{
+    //checks how many players of each role are alive
+    //if one of the win condition is fullfilled, an array of winning players ID is returned
+    
+    let SherifAlive=0;
+    let BanditAlive=0;
+    let DeputeeAlive=0;
+    let OutlawAlive=0;
+    let SherifArray;
+    let BanditArray;
+    let OutlawArray;
+    for(let i=0;i<=Room.PlayersArray.length;i++)
+    {
+        if(Room.PlayersArray[i].getRole()=="Sherif")
+        {
+            SherifAlive++;
+            SherifArray.push(Room.PlayersArray[i].getId());
+        }
+        if(AuxPlayerArray[i].getRole()=="Outlaw")
+        {
+            OutlawAlive++;
+            OutlawArray.push(Room.PlayersArray[i].getId());
+        }
+        if(AuxPlayerArray[i].getRole()=="Bandit")
+        {
+            BanditAlive++;
+            BanditArray.push(Room.PlayersArray[i].getId());
+        }
+        if(AuxPlayerArray[i].getRole()=="Deputee")
+        {
+            DeputeeAlive++;
+            DeputeeArray.push(Room.PlayersArray[i].getId());
+        }
+    }
+    if(SherifAlive==0)
+        return BanditArray;
+    else if(BanditAlive==0&&OutlawAlive==0)
+    {
+        return SherifArray;
+    }
+    else if(OutlawAlive==1&&BanditAlive==0&&DeputeeAlive==0&&SherifAlive==0)
+    {
+        return OutlawArray;
+    }
+    else
+        return [];
+}
+module.exports={ startOfGame , CreateNameArray, PlayerEliminated,RollDice,DiceMeaning , CreateNextPlayerArray , CreateCharacterArray , CreateHPArray,IsGameOver};
 
 
