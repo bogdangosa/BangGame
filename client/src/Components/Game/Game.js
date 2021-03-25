@@ -66,6 +66,11 @@ const Game = (props)=>{
 
         socket.on('PlayersUpdatedHp',PlayersHP=>{
             setHPArray(PlayersHP);
+
+            let CurentIndex = PlayersArray.findIndex(PlayerName=> PlayerName == CurentPlayerName);
+
+            setCurentPlayerHP(PlayersHP[CurentIndex]);
+
         })
         
     },[]);
@@ -260,7 +265,7 @@ const Game = (props)=>{
                             <img src={CharacterPhoto(CharactersArray[index])}></img>
                             <p className={playerName == PlayersTurn ? "Bold":""}>{playerName}</p>    
                             <p className="HP">HP:{HPArray[index]}</p> 
-                            { (ActionState && DiceMeaning[4]>0) ? <p className="HealButton" onClick={()=>HealDamage(playerName,1)}>Heal</p> : <></> }
+                            { (ActionState && DiceMeaning[4]>0) && (playerName !=CurentPlayerName) ? <p className="HealButton" onClick={()=>HealDamage(playerName,1)}>Heal</p> : <></> }
                             
                         </div>
                         );

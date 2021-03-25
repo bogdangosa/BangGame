@@ -79,6 +79,7 @@
     width: 5vw;
     height: 5vw;
     border-radius: 30%;
+    border: 2px solid #000;
 }
 .Player p{
     width: 5vw;
