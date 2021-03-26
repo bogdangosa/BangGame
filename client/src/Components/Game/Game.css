@@ -106,14 +106,14 @@
 }
 
 
-.HealButton{
+.HealDamageButton{
     padding: 0.2rem;
-    background-color: #fffffb;
+    background-color: #c7c7c7;
     border-radius: 1rem;
     margin-top: 0.3rem;
     cursor: pointer;
     transition: 0.5s ease;
 }
-.HealButton:hover{
+.HealDamageButton:hover{
     background-color: #ade8ff;
 }

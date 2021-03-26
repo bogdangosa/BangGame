@@ -213,6 +213,11 @@ const Game = (props)=>{
             AuxDiceMeaning[4]--;
             SetDiceMeaning(AuxDiceMeaning);
         }
+        else if(Delta == -1){
+            let AuxDiceMeaning = DiceMeaning;
+            AuxDiceMeaning[0]--;
+            SetDiceMeaning(AuxDiceMeaning);
+        }
     }
 
 
@@ -259,13 +264,13 @@ const Game = (props)=>{
                
                 {
                     PlayersArray.map((playerName,index)=>{
-                        //console.log(CharactersArray[index]);
                         return(
                         <div className="Player" key={index}>
                             <img src={CharacterPhoto(CharactersArray[index])}></img>
                             <p className={playerName == PlayersTurn ? "Bold":""}>{playerName}</p>    
                             <p className="HP">HP:{HPArray[index]}</p> 
-                            { (ActionState && DiceMeaning[4]>0) && (playerName !=CurentPlayerName) ? <p className="HealButton" onClick={()=>HealDamage(playerName,1)}>Heal</p> : <></> }
+                            { (ActionState && DiceMeaning[4]>0) && (playerName !=CurentPlayerName) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,1)}>Heal</p> : <></> }
+                            { (ActionState && DiceMeaning[0]>0) && (playerName !=CurentPlayerName) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,-1)}>Damage</p> : <></> }
                             
                         </div>
                         );
