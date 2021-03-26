@@ -14,7 +14,7 @@ const Game = (props)=>{
     const [PlayersArray,setPlayersArray] = useState([]);
     const [CharactersArray,setCharactersArray] = useState([]);
     const [HPArray,setHPArray] = useState([]);
-    const [PositionsIndexArray,SetPositionsIndexArray] = useState([]);
+    const [CurentIndex,SetCurentIndex] = useState(0);
 
     const [DiceValues,SetDiceValues] = useState([0,0,0,0,0]);
     const [DiceMeaning,SetDiceMeaning] = useState([6,6,6,6,6]);
@@ -66,9 +66,6 @@ const Game = (props)=>{
 
         socket.on('PlayersUpdatedHp',PlayersHP=>{
             setHPArray(PlayersHP);
-
-            let CurentIndex = PlayersArray.findIndex(PlayerName=> PlayerName == CurentPlayerName);
-
             setCurentPlayerHP(PlayersHP[CurentIndex]);
 
         })
@@ -82,6 +79,7 @@ const Game = (props)=>{
         SetCurentPlayerName(data.name);
         SetThrowsRemaining(data.throwsremaining);
         let cIndex = data.playersnamearray.findIndex(PlayerName => PlayerName == data.name);
+        SetCurentIndex(cIndex);
         SetCurentPlayerCharacter(data.playerscharacterarray[cIndex]);
         setCurentPlayerHP(data.playersHPArray[cIndex]);
         setPlayersArray(data.playersnamearray);
@@ -269,8 +267,8 @@ const Game = (props)=>{
                             <img src={CharacterPhoto(CharactersArray[index])}></img>
                             <p className={playerName == PlayersTurn ? "Bold":""}>{playerName}</p>    
                             <p className="HP">HP:{HPArray[index]}</p> 
-                            { (ActionState && DiceMeaning[4]>0) && (playerName !=CurentPlayerName) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,1)}>Heal</p> : <></> }
-                            { (ActionState && DiceMeaning[0]>0) && (playerName !=CurentPlayerName) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,-1)}>Damage</p> : <></> }
+                            { (ActionState && DiceMeaning[4]>0) && (playerName != CurentPlayerName) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,1)}>Heal</p> : <></> }
+                            { (ActionState && DiceMeaning[0]>0) && (playerName == PlayersArray[CurentIndex+1] || playerName == PlayersArray[CurentIndex-1]) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,-1)}>Damage</p> : <></> }
                             
                         </div>
                         );
