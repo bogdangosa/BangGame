@@ -216,6 +216,11 @@ const Game = (props)=>{
             AuxDiceMeaning[0]--;
             SetDiceMeaning(AuxDiceMeaning);
         }
+        else if(Delta == -2){
+            let AuxDiceMeaning = DiceMeaning;
+            AuxDiceMeaning[1]--;
+            SetDiceMeaning(AuxDiceMeaning);
+        }
     }
 
 
@@ -268,8 +273,8 @@ const Game = (props)=>{
                             <p className={playerName == PlayersTurn ? "Bold":""}>{playerName}</p>    
                             <p className="HP">HP:{HPArray[index]}</p> 
                             { (ActionState && DiceMeaning[4]>0) && (playerName != CurentPlayerName) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,1)}>Heal</p> : <></> }
-                            { (ActionState && DiceMeaning[0]>0) && (playerName == PlayersArray[CurentIndex+1] || playerName == PlayersArray[CurentIndex-1]) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,-1)}>Damage</p> : <></> }
-                            
+                            { (ActionState && DiceMeaning[0]>0) && (playerName == PlayersArray[CurentIndex+1] || playerName == PlayersArray[CurentIndex-1]||(CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-1])||(CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[0])) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,-1)}>Damage</p> : <></> }
+                            { (ActionState && DiceMeaning[1]>0) && (playerName == PlayersArray[CurentIndex+2] || playerName == PlayersArray[CurentIndex-2]||(CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-2])||(CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[1])) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,-2)}>Damage</p> : <></> }
                         </div>
                         );
                     })
