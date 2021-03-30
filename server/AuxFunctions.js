@@ -1,3 +1,15 @@
+/*const server = require('express')();
+const cors = require('cors');
+server.use(cors());
+
+const http = require('http').createServer(server);
+const io = require('socket.io')(http, {
+    cors: {
+      origin: "http://localhost:3000",
+      methods: ["GET", "POST"]
+    }
+  });
+*/
 function startOfGame(PlayersArray)
 {
     Arrows=9;
@@ -145,8 +157,10 @@ function RollDice(diceStates,room,PlayerID)
                 DiceArray[i]=Dice;
                 if(Dice==4)
                 {
-                    //room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)].ChangeHP(-1);
-
+                    room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)].ChangeHP(-1);
+                    room.DiceResult[i]=4;
+                    //let PlayersHP=CreateHPArray(room.PlayersArray);
+                    //io.to(room.RoomId).emit('PlayersUpdatedHp',PlayersHP);
                 }
                 else if(Dice==3)
                 {
@@ -179,6 +193,10 @@ function RollDice(diceStates,room,PlayerID)
             }
         }
        
+    }
+    if(room.NrOfThrows==0)
+    {
+        room.DiceResult=DiceArray;
     }
     return DiceArray;
     

@@ -97,6 +97,7 @@ const Game = (props)=>{
 
         if(ThrowsRemaining == 0){
             setActionState(true);
+            
         }
         
         if(CurentPlayerName != PlayersTurn || ThrowsRemaining == 0) return;
