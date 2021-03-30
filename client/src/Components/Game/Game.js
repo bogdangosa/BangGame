@@ -204,22 +204,24 @@ const Game = (props)=>{
 
 
     const HealDamage =(PlayerName,Delta)=>{
-        socket.emit("HealDamage",{name:PlayerName,delta:Delta,room:RoomId});
         
         if(Delta == 1){
             let AuxDiceMeaning = DiceMeaning;
             AuxDiceMeaning[4]--;
             SetDiceMeaning(AuxDiceMeaning);
+            socket.emit("HealDamage",{name:PlayerName,delta:1,room:RoomId});
         }
         else if(Delta == -1){
             let AuxDiceMeaning = DiceMeaning;
             AuxDiceMeaning[0]--;
             SetDiceMeaning(AuxDiceMeaning);
+            socket.emit("HealDamage",{name:PlayerName,delta:-1,room:RoomId});
         }
         else if(Delta == -2){
             let AuxDiceMeaning = DiceMeaning;
             AuxDiceMeaning[1]--;
             SetDiceMeaning(AuxDiceMeaning);
+            socket.emit("HealDamage",{name:PlayerName,delta:-1,room:RoomId});
         }
     }
 
@@ -272,9 +274,9 @@ const Game = (props)=>{
                             <img src={CharacterPhoto(CharactersArray[index])}></img>
                             <p className={playerName == PlayersTurn ? "Bold":""}>{playerName}</p>    
                             <p className="HP">HP:{HPArray[index]}</p> 
-                            { (ActionState && DiceMeaning[4]>0) && (playerName != CurentPlayerName) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,1)}>Heal</p> : <></> }
-                            { (ActionState && DiceMeaning[0]>0) && (playerName == PlayersArray[CurentIndex+1] || playerName == PlayersArray[CurentIndex-1]||(CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-1])||(CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[0])) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,-1)}>Damage</p> : <></> }
-                            { (ActionState && DiceMeaning[1]>0) && (playerName == PlayersArray[CurentIndex+2] || playerName == PlayersArray[CurentIndex-2]||(CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-2])||(CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[1])) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,-2)}>Damage</p> : <></> }
+                            { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[4]>0) && (playerName != CurentPlayerName) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,1)}>Heal</p> : <></> }
+                            { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[0]>0) && (playerName == PlayersArray[CurentIndex+1] || playerName == PlayersArray[CurentIndex-1]||(CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-1])||(CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[0])) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,-1)}>Cutit</p> : <></> }
+                            { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[1]>0) && (playerName == PlayersArray[CurentIndex+2] || playerName == PlayersArray[CurentIndex-2]||(CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-2])||(CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[1])) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,-2)}>Pistol</p> : <></> }
                         </div>
                         );
                     })
