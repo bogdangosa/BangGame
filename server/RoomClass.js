@@ -11,6 +11,7 @@ class Room {
     DiceResult
     NrOfThrows
     PlayerToRollID
+    SherifName
     
     
 

@@ -75,7 +75,10 @@ io.on('connection',socket=>{
       if(cRoom.PlayersReady == cRoom.PlayersArray.length && cRoom.PlayersReady>=3){
 
         cRoom.PlayersArray = lib.startOfGame(cRoom.PlayersArray);
-
+        if(cRoom.PlayersArray.length >3){
+          let SherifIndex =  cRoom.PlayersArray.findIndex(Player => Player.getRole() == "Sherif")
+          cRoom.SherifName = cRoom.PlayersArray[SherifIndex].getPlayer();
+        }
         cRoom.PlayerToRollID = cRoom.PlayersArray[0].getId();
         
         io.to(cRoom.RoomId).emit('GameStarted');
@@ -89,8 +92,9 @@ io.on('connection',socket=>{
             playersturn: cRoom.PlayersArray[0].getPlayer(),
             room:cRoom.RoomId,
             playersHPArray: lib.CreateHPArray(cRoom.PlayersArray),
-            throwsremaining: cRoom.NrOfThrows});
-
+            throwsremaining: cRoom.NrOfThrows,
+            sherifname: cRoom.SherifName});
+          
         })
 
 
