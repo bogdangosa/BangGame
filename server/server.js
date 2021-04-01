@@ -199,6 +199,12 @@ io.on('connection',socket=>{
         
         let cRoom = RoomArray.find(sRoom=> sRoom.RoomId == RoomName); 
         cRoom.PlayersArray = lib.PlayerEliminated(socket.id , cRoom.PlayersArray);
+        console.log(cRoom.PlayersArray);
+        io.to(cRoom).emit('UpdatePlayers',{
+          playersnamearray: lib.CreateNameArray(cRoom.PlayersArray),
+          playerscharacterarray:lib.CreateCharacterArray(cRoom.PlayersArray),
+          playersHPArray: lib.CreateHPArray(cRoom.PlayersArray)
+        });
 
 
         socket.leave(RoomName);

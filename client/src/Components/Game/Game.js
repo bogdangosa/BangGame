@@ -70,6 +70,12 @@ const Game = (props)=>{
             setCurentPlayerHP(PlayersHP[CurentIndex]);
 
         })
+
+        socket.on('UpdatePlayers', data =>{
+            setPlayersArray(data.playersnamearray);
+            setCharactersArray(data.playerscharacterarray);
+            setHPArray(data.playersHPArray);
+        });
         
     },[]);
 
