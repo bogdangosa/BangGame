@@ -72,6 +72,7 @@ const Game = (props)=>{
         })
 
         socket.on('UpdatePlayers', data =>{
+            console.log(data.playersnamearray);
             setPlayersArray(data.playersnamearray);
             setCharactersArray(data.playerscharacterarray);
             setHPArray(data.playersHPArray);

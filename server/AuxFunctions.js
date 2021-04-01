@@ -122,8 +122,8 @@ function PlayerEliminated(id,playerArray)
 {
     let JucatorI,JucatorAux;
     JucatorI=playerArray.findIndex(Jucator=>Jucator.getId()==id);  
-    //playerArray[JucatorI].getLeft().setRight(playerArray[JucatorI].getRight());                //connection between left and right of the player are beeing made
-    //playerArray[JucatorI].getRight().setLeft(playerArray[JucatorI].getLeft());
+    playerArray[JucatorI].getLeft().setRight(playerArray[JucatorI].getRight());                //connection between left and right of the player are beeing made
+    playerArray[JucatorI].getRight().setLeft(playerArray[JucatorI].getLeft());
     JucatorAux=playerArray[0];
     playerArray[0]=playerArray[JucatorI];
     playerArray[JucatorI]=JucatorAux;

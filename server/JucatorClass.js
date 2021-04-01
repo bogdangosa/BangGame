@@ -15,6 +15,7 @@ class Jucator
     #player;
     #role;
     #hp;
+    #hpMax;
     #nrOfArrows;
     #character;
     #left;
@@ -26,6 +27,7 @@ class Jucator
         this.#id=id;
         this.#player=player;
         this.#hp=8;
+        this.#hpMax=8;
         this.#nrOfArrows=0;
     }
     
@@ -33,8 +35,8 @@ class Jucator
     //the player takes damage equal to damageAmount
     ChangeHP(Amount)
     {
-       
-        this.#hp=this.#hp+Amount;    
+        if(this.#hp < this.#hpMax || Amount < 0) 
+            this.#hp=this.#hp+Amount;    
         return this.#hp;
     }
 
