@@ -213,7 +213,7 @@ ResultArray[4]=amount of damage each player takes due gatling
 function DiceMeaning(Room)
 {
     let ResultArray=[0,0,0,0,0,0];
-    let NrOfGatling;
+    let NrOfGatling=0;
     for(let i=0;i<Room.DiceResult.length;i++)
     {
         switch(Room.DiceResult[i])

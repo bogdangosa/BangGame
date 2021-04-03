@@ -35,7 +35,9 @@ class Jucator
     //the player takes damage equal to damageAmount
     ChangeHP(Amount)
     {
-        if(this.#hp < this.#hpMax || Amount < 0) 
+        if(Amount<1 && Amount>0)
+            this.#hp=Math.trunc(this.#hp*Amount);
+        else if(this.#hp < this.#hpMax || Amount < 0) 
             this.#hp=this.#hp+Amount;    
         return this.#hp;
     }
