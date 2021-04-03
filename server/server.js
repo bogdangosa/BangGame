@@ -187,6 +187,18 @@ io.on('connection',socket=>{
       let PlayerChangedHP = cRoom.PlayersArray[cRoom.PlayersArray.findIndex(Player=>Player.getPlayer()== data.name)];
       PlayerChangedHP.ChangeHP(data.delta);
       let PlayersHP=lib.CreateHPArray(cRoom.PlayersArray);
+      PlayersHP.forEach((HP,index)=>{
+        if(HP==0){
+          cRoom.PlayersArray = lib.PlayerEliminated(cRoom.PlayersArray[index].getId() , cRoom.PlayersArray);
+          PlayersHP = lib.CreateHPArray(cRoom.PlayersArray);
+          io.to(cRoom.RoomId).emit('UpdatePlayers',{
+            playersnamearray: lib.CreateNameArray(cRoom.PlayersArray),
+            playerscharacterarray:lib.CreateCharacterArray(cRoom.PlayersArray),
+            playersHPArray: PlayersHP 
+          });
+        
+        }
+      })
       io.to(data.room).emit('PlayersUpdatedHp',PlayersHP);
       //ia damage sau da heal;
       //returneaza hp la toti
