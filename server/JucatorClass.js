@@ -74,6 +74,11 @@ class Jucator
     setRole(role)
     {
         this.#role=role;
+        if(role=="Sherif")
+        {
+            this.#hpMax=this.#hpMax+2;
+            this.#hp=this.#hp + 2;
+        }
     }
     takeArrow()
     {
@@ -103,6 +108,37 @@ class Jucator
     setCharacter(c)
     {
         this.#character=c;
+        switch(c)
+        {
+            case "Paul Regret":
+                this.#hpMax=this.#hpMax + 1;
+                this.#hp=this.#hp + 1;
+                break;
+            case "Jourdonnais":
+                this.#hpMax=this.#hpMax - 1;
+                this.#hp=this.#hp - 1;
+                break;
+            case "Rose Doolan":
+                this.#hpMax=this.#hpMax + 1;
+                this.#hp=this.#hp + 1;
+                break; 
+            case "Kit Carlson":
+                this.#hpMax=this.#hpMax - 1;
+                this.#hp=this.#hp - 1;
+                break;
+            case "Vulture Sam":
+                this.#hpMax=this.#hpMax + 1;
+                this.#hp=this.#hp + 1;
+                break;
+            case "Jessie Jones":
+                this.#hpMax=this.#hpMax + 1;
+                this.#hp=this.#hp + 1;
+                break;
+            case "El Gringo":
+                this.#hpMax=this.#hpMax - 1;
+                this.#hp=this.#hp - 1;
+                break;
+        }
     }
 
     getCharacter()
