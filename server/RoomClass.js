@@ -12,6 +12,7 @@ class Room {
     NrOfThrows
     PlayerToRollID
     SherifName
+    GameInProgress
     
     
 
@@ -23,6 +24,7 @@ class Room {
         this.nrOfArrows = 9;
         //this.PlayerToRollID = this.PlayersArray[0].getId();
         this.NrOfThrows=3;
+        this.GameInProgress=false;
         this.DiceResult=[0,0,0,0,0]
         
     }

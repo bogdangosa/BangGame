@@ -53,10 +53,11 @@ io.on('connection',socket=>{
 
     socket.on('NewUser',(UserData)=>{
       let cRoom = RoomArray.find(sRoom=> sRoom.RoomId == UserData.room); 
-      if(cRoom == null){
+      if(cRoom == null || cRoom.GameInProgress){
         socket.emit('StartingLobbyData',{room:"error",curentPlayersArray:0});
       }
-      else{            
+      else{ 
+    
         cRoom.AddPlayer(UserData.name,socket.id);
         socket.join(cRoom.RoomId);
 
@@ -80,6 +81,7 @@ io.on('connection',socket=>{
           cRoom.SherifName = cRoom.PlayersArray[SherifIndex].getPlayer();
         }
         cRoom.PlayerToRollID = cRoom.PlayersArray[0].getId();
+        cRoom.GameInProgress = true;
         
         io.to(cRoom.RoomId).emit('GameStarted');
         cRoom.PlayersArray.forEach(Player=>{

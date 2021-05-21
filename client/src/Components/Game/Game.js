@@ -48,6 +48,7 @@ const Game = (props)=>{
 
         socket.on('DiceResult',DiceRoll=>{
             console.log(DiceRoll);
+            console.log(SelectedDices);
             SetThrowsRemaining(DiceRoll.throwsremaining);
 
             if(DiceRoll.throwsremaining==0){
@@ -59,8 +60,9 @@ const Game = (props)=>{
 
             DiceRoll.result.forEach(DiceValue => {
                 AuxDiceArray.push(DiceValue);
-
             });
+
+            //LockDice(1);
 
             SetDiceValues(AuxDiceArray);
         });
@@ -186,6 +188,22 @@ const Game = (props)=>{
                 return require('../CharacterImages/RoseDoolan.jpg').default
                 break;
 
+            case 'Pedro Ramirez':
+                return require('../CharacterImages/PedroRamirez.jpg').default
+                break;
+
+            case 'Black Jack':
+                return require('../CharacterImages/BlackJack.jpg').default
+                break;
+
+            case 'Jesse Jones':
+                return require('../CharacterImages/JesseJones.jpg').default
+                break
+
+            case 'El Gringo':
+                return require('../CharacterImages/ElGringo.jpg').default
+                break;
+
             default:
                 return require('../CharacterImages/LuckyDuke.jpg').default
                 break;
@@ -195,6 +213,7 @@ const Game = (props)=>{
     const LockDice = (DiceIndex) =>{
         if(CurentPlayerName != PlayersTurn)return;
         let AuxSelectedDices = [];
+        console.log("Locking dice " + DiceIndex);
         
         SelectedDices.forEach((SelectedDice,index)=>{
             if(index==DiceIndex)
