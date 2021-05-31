@@ -191,12 +191,14 @@ io.on('connection',socket=>{
       let PlayersHP=lib.CreateHPArray(cRoom.PlayersArray);
       PlayersHP.forEach((HP,index)=>{
         if(HP==0){
+          let PlayerEliminatedName = cRoom.PlayersArray[index].getPlayer();
           cRoom.PlayersArray = lib.PlayerEliminated(cRoom.PlayersArray[index].getId() , cRoom.PlayersArray);
           PlayersHP = lib.CreateHPArray(cRoom.PlayersArray);
           io.to(cRoom.RoomId).emit('UpdatePlayers',{
             playersnamearray: lib.CreateNameArray(cRoom.PlayersArray),
             playerscharacterarray:lib.CreateCharacterArray(cRoom.PlayersArray),
-            playersHPArray: PlayersHP 
+            playersHPArray: PlayersHP,
+            eliminatedplayer:PlayerEliminatedName
           });
         
         }
@@ -219,7 +221,8 @@ io.on('connection',socket=>{
         io.to(cRoom.RoomId).emit('UpdatePlayers',{
           playersnamearray: lib.CreateNameArray(cRoom.PlayersArray),
           playerscharacterarray:lib.CreateCharacterArray(cRoom.PlayersArray),
-          playersHPArray: lib.CreateHPArray(cRoom.PlayersArray)
+          playersHPArray: lib.CreateHPArray(cRoom.PlayersArray),
+          eliminatedplayer:"to be done"
         });
 
 

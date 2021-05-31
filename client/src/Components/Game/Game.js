@@ -11,6 +11,8 @@ const Game = (props)=>{
     const [PlayersTurn,setPlayersTurn] = useState('');
     const [SherifName,setSherifName] = useState('');
     const [CurentPlayerHP,setCurentPlayerHP] =useState(0);
+    const [SpectatorMode,setSpectatorMode] = useState(false);
+    const [PlayerDied,setPlayerDied] = useState(false);
 
     const [PlayersArray,setPlayersArray] = useState([]);
     const [CharactersArray,setCharactersArray] = useState([]);
@@ -78,6 +80,9 @@ const Game = (props)=>{
             setPlayersArray(data.playersnamearray);
             setCharactersArray(data.playerscharacterarray);
             setHPArray(data.playersHPArray);
+            console.log(data.eliminatedplayer);
+            if(data.eliminatedplayer == CurentPlayerName)
+                setPlayerDied(true);
         });
         
     },[]);
@@ -265,6 +270,12 @@ const Game = (props)=>{
         }
     }
 
+    const BackToLobby =()=>{
+
+    }
+    const ContinueSpectating = () =>{
+
+    }
 
   
     return(
@@ -324,6 +335,21 @@ const Game = (props)=>{
                 }
 
             </div>
+
+            {PlayerDied ?
+                <div className="PlayerDiedPopup">
+                       <p>You Died</p>
+                       <Button Text="Back to Lobby" onClick={ ()=>BackToLobby() } Selected={false}/>
+                       <Button Text="Continue Spectating" onClick={ ()=>ContinueSpectating() } Selected={false}/>
+
+                </div>
+
+                :
+                
+                      
+                <div></div> 
+
+            }
 
         </div>
     )

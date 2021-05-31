@@ -117,3 +117,28 @@
 .HealDamageButton:hover{
     background-color: #ade8ff;
 }
+
+.PlayerDiedPopup{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    height: 80%;
+    width: 70%;
+    z-index: 100;
+    border: 3px #000000 solid;
+    background-color: #c7c7c7;
+    border-radius: 2rem;
+}
+.PlayerDiedPopup p{
+    width: 100%;
+    text-align: center;
+    font-size: 4rem;
+}
+.PlayerDiedPopup .Button{
+    width: 20%;
+}
