@@ -120,9 +120,8 @@ io.on('connection',socket=>{
     socket.on('NextPlayer',RoomName=>{
       let cRoom = RoomArray[RoomArray.findIndex(sRoom=> sRoom.RoomId == RoomName)]; 
       
+      
       cRoom.Turn();
-
-
       let PlayersTurnName = cRoom.PlayersArray.find(Player => Player.getId() == cRoom.PlayerToRollID).getPlayer();
 
       io.to(RoomName).emit('PlayersTurn', {playersturnname:PlayersTurnName,throwsremaining:cRoom.NrOfThrows} );
@@ -207,6 +206,13 @@ io.on('connection',socket=>{
       //ia damage sau da heal;
       //returneaza hp la toti
     })
+
+    socket.on('PoisonPlayer',data=>{
+      io.to(data.room).emit('DrinkOffered',{poison:data.delta,player:data.name});  
+    })
+
+    
+
 
     socket.on('disconnecting',reason=>{
 

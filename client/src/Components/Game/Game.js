@@ -14,6 +14,9 @@ const Game = (props)=>{
     const [SpectatorMode,setSpectatorMode] = useState(false);
     const [PlayerDied,setPlayerDied] = useState(false);
 
+    const [PlayerDrinker,setPlayerDrinker]=useState('');
+    const [Poison,setPoison]=useState();
+
     const [PlayersArray,setPlayersArray] = useState([]);
     const [CharactersArray,setCharactersArray] = useState([]);
     const [HPArray,setHPArray] = useState([]);
@@ -84,6 +87,11 @@ const Game = (props)=>{
             if(data.eliminatedplayer == CurentPlayerName)
                 setPlayerDied(true);
         });
+
+        socket.on('DrinkOffered',data =>{
+            setPlayerDrinker(data.player);
+            setPoison(data.poison);
+        })
         
     },[]);
 
@@ -137,6 +145,8 @@ const Game = (props)=>{
 
     }
 
+
+    
     const NextPlayer = () =>{
         if(CurentPlayerName != PlayersTurn) return;
         socket.emit('NextPlayer',RoomId);
@@ -260,7 +270,12 @@ const Game = (props)=>{
         case 4:  
             AuxDiceMeaning[4]--;
             SetDiceMeaning(AuxDiceMeaning);
-            socket.emit("HealDamage",{name:PlayerName,delta:1,room:RoomId});
+            socket.emit("PoisonPlayer",{name:PlayerName,delta:1,room:RoomId});
+            break;
+        case -4:
+            AuxDiceMeaning[4]--;
+            SetDiceMeaning(AuxDiceMeaning);
+            socket.emit("PoisonPlayer",{name:PlayerName,delta:-1,room:RoomId});
             break;
         case 5:
             AuxDiceMeaning[5]--;
@@ -293,6 +308,7 @@ const Game = (props)=>{
             <Button Text="Roll Dice" className="RollDiceButton" onClick={ ()=>RollDice() } Selected={CurentPlayerName != PlayersTurn || ThrowsRemaining == 0}/>
             <Button Text="Next Player" className="NextPlayerButton" onClick={ ()=>NextPlayer() } Selected={ CurentPlayerName != PlayersTurn}/>
             
+
             <p className="ThrowsRemaining">Throws Remaining: {ThrowsRemaining}</p>
 
             <div className="DicesContainer">
@@ -324,10 +340,12 @@ const Game = (props)=>{
                             <img src={CharacterPhoto(CharactersArray[index])}></img>
                             <p className={playerName == PlayersTurn ? "Bold":""}>{playerName == SherifName ? playerName+" <^>" : playerName}</p>
                             <p className="HP">HP:{HPArray[index]}</p> 
-                            { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[4]>0) /*&& (playerName != CurentPlayerName)*/ ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,4)}>Heal</p> : <></> }
                             { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[0]>0) && (playerName == PlayersArray[CurentIndex+1] || playerName == PlayersArray[CurentIndex-1]||(CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-1])||(CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[0])) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,0)}>Cutit</p> : <></> }
                             { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[1]>0) && (playerName == PlayersArray[CurentIndex+2] || playerName == PlayersArray[CurentIndex-2]||(CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-2])||(CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[1])) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,1)}>Pistol</p> : <></> }
                             { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[5]>0) && (playerName != CurentPlayerName) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,5)}>Half</p> : <></> }
+                            { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[4]>0) ?  <p className="HealDamageButton" onClick={()=>{HealDamage(playerName,-4) }}>Poison</p> :<></>}
+                            { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[4]>0) ?  <p className="HealDamageButton" onClick={()=>{HealDamage(playerName,4)}}>Heal</p> :<></>}
+                            
                             
                         </div>
                         );
@@ -351,6 +369,25 @@ const Game = (props)=>{
 
             }
 
+            
+            
+            {(CurentPlayerName == PlayerDrinker) ?
+                <div className="PlayerDiedPopup">  
+                    <p>Someone ordered you a drink</p> 
+                    <Button Text="Accept" className="HealDamageButton" onClick={ ()=> {
+                        socket.emit("HealDamage",{name:CurentPlayerName,delta:Poison,room:RoomId});
+                        setPoison(0);
+                        setPlayerDrinker(''); 
+                    }}Selected={false}/>
+                    <Button Text="Decline" className="HealDamageButton" onClick={ ()=> {
+                        setPoison(0);
+                        setPlayerDrinker('');
+                    }}Selected={false}/>
+                    
+                </div>    
+            : <div></div>
+            }
+            
         </div>
     )
 }
