@@ -344,11 +344,88 @@ const Game = (props)=>{
                             <img src={CharacterPhoto(CharactersArray[index])}></img>
                             <p className={playerName == PlayersTurn ? "Bold":""}>{playerName == SherifName ? playerName+" <^>" : playerName}</p>
                             <p className="HP">HP:{HPArray[index]}</p> 
-                            { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[0]>0) && (playerName == PlayersArray[CurentIndex+1] || playerName == PlayersArray[CurentIndex-1]||(CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-1])||(CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[0])) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,0)}>Cutit</p> : <></> }
-                            { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[1]>0) && (playerName == PlayersArray[CurentIndex+2] || playerName == PlayersArray[CurentIndex-2]||(CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-2])||(CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[1])) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,1)}>Pistol</p> : <></> }
+
                             { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[5]>0) && (playerName != CurentPlayerName) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,5)}>Half</p> : <></> }
                             { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[4]>0) ?  <p className="HealDamageButton" onClick={()=>{HealDamage(playerName,-4) }}>Poison</p> :<></>}
                             { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[4]>0) ?  <p className="HealDamageButton" onClick={()=>{HealDamage(playerName,4)}}>Heal</p> :<></>}
+
+
+                            { (CurentPlayerCharacter != 'Rose Doolan') && (CurentPlayerCharacter != 'Calamity Janet') && (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[0]>0) &&
+                            (
+                                playerName == PlayersArray[CurentIndex+1] ||
+                                playerName == PlayersArray[CurentIndex-1] ||
+                                (CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-1]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[0])
+                            )? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,0)}>Cutit</p> : <></> }
+
+
+                            { (CurentPlayerCharacter != 'Rose Doolan') && (CurentPlayerCharacter != 'Calamity Janet') && (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[1]>0) &&
+                            (
+                                playerName == PlayersArray[CurentIndex+2] ||
+                                playerName == PlayersArray[CurentIndex-2] ||
+                                (CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-2]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[1])
+                            )? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,1)}>Pistol</p> : <></> }
+                            
+                            
+
+                            {(CurentPlayerCharacter== 'Calamity Janet')&&(PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[0]>0) && 
+                            (
+                                playerName == PlayersArray[CurentIndex+2] || 
+                                playerName == PlayersArray[CurentIndex-2] ||
+                                (CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-2]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[1]) ||
+                                playerName == PlayersArray[CurentIndex+1] || 
+                                playerName == PlayersArray[CurentIndex-1] ||
+                                (CurentIndex==0 && playerName==PlayersArray[PlayersArray.length-1]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[0])
+                            )? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,0)}>Damage</p> : <></> }
+
+
+                            {(CurentPlayerCharacter== 'Calamity Janet')&&(PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[1]>0) && 
+                            (
+                                playerName == PlayersArray[CurentIndex+2] || 
+                                playerName == PlayersArray[CurentIndex-2] ||
+                                (CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-2]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[1]) ||
+                                playerName == PlayersArray[CurentIndex+1] || 
+                                playerName == PlayersArray[CurentIndex-1] ||
+                                (CurentIndex==0 && playerName==PlayersArray[PlayersArray.length-1]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[0])
+                            )? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,1)}>Damage</p> : <></> }
+
+                            {(CurentPlayerCharacter== 'Rose Doolan')&&(PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[0]>0) && 
+                            (
+                                playerName == PlayersArray[CurentIndex+2] || 
+                                playerName == PlayersArray[CurentIndex-2] ||
+                                (CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-2]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[1]) ||
+                                playerName == PlayersArray[CurentIndex+1] || 
+                                playerName == PlayersArray[CurentIndex-1] ||
+                                (CurentIndex==0 && playerName==PlayersArray[PlayersArray.length-1]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[0]) ||
+                                playerName == PlayersArray[CurentIndex+3] || 
+                                playerName == PlayersArray[CurentIndex-3] ||
+                                (CurentIndex==0 && playerName==PlayersArray[PlayersArray.length-3]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[2])
+                            )? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,0)}>Damage</p> : <></> }
+
+
+                            {(CurentPlayerCharacter== 'Rose Doolan')&&(PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[1]>0) && 
+                            (
+                                playerName == PlayersArray[CurentIndex+2] || 
+                                playerName == PlayersArray[CurentIndex-2] ||
+                                (CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-2]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[1]) ||
+                                playerName == PlayersArray[CurentIndex+1] || 
+                                playerName == PlayersArray[CurentIndex-1] ||
+                                (CurentIndex==0 && playerName==PlayersArray[PlayersArray.length-1]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[0]) ||
+                                playerName == PlayersArray[CurentIndex+3] || 
+                                playerName == PlayersArray[CurentIndex-3] ||
+                                (CurentIndex==0 && playerName==PlayersArray[PlayersArray.length-3]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[2])
+                            )? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,1)}>Damage</p> : <></> }
                             
                             
                         </div>
