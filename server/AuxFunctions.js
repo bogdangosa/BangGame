@@ -225,10 +225,10 @@ function DiceMeaning(Room)
                 ResultArray[1]++;
             break;
             case 3:
-                ResultArray[2]++;
+                //ResultArray[2]++;
             break;
             case 4:
-                ResultArray[3]++;
+                //ResultArray[3]++;
             break;
             case 5:
                 ResultArray[4]++;

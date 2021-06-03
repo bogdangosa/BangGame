@@ -70,6 +70,7 @@ const Game = (props)=>{
             //LockDice(1);
 
             SetDiceValues(AuxDiceArray);
+
         });
 
         socket.on('PlayersUpdatedHp',PlayersHP=>{
@@ -141,6 +142,7 @@ const Game = (props)=>{
 
         if(ThrowsRemaining == 0){
             setActionState(true);
+
         }
 
     }
@@ -283,6 +285,8 @@ const Game = (props)=>{
             socket.emit("HealDamage",{name:PlayerName,delta:0.5,room:RoomId});
             break;
         }
+        if(JSON.stringify(AuxDiceMeaning)==JSON.stringify([0,0,0,0,0,0]))    //the only way it works to compare 2 array fast
+            NextPlayer();
     }
 
     const BackToLobby =()=>{
@@ -306,7 +310,7 @@ const Game = (props)=>{
             </div>
 
             <Button Text="Roll Dice" className="RollDiceButton" onClick={ ()=>RollDice() } Selected={CurentPlayerName != PlayersTurn || ThrowsRemaining == 0}/>
-            <Button Text="Next Player" className="NextPlayerButton" onClick={ ()=>NextPlayer() } Selected={ CurentPlayerName != PlayersTurn}/>
+            <Button Text="Next Player" className="NextPlayerButton" onClick={ ()=>NextPlayer() } Selected={ CurentPlayerName != PlayersTurn || (ThrowsRemaining!=0)}/>
             
 
             <p className="ThrowsRemaining">Throws Remaining: {ThrowsRemaining}</p>
