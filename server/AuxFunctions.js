@@ -158,7 +158,8 @@ function RollDice(diceStates,room,PlayerID)
                 if(Dice==4)
                 {
                     room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)].ChangeHP(-1);
-                    room.DiceResult[i]=4;
+                    if(room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)].getCharacter!='Black Jack')
+                        room.DiceResult[i]=4;
                     //let PlayersHP=CreateHPArray(room.PlayersArray);
                     //io.to(room.RoomId).emit('PlayersUpdatedHp',PlayersHP);
                 }
