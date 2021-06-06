@@ -25,6 +25,7 @@ const Game = (props)=>{
     const [DiceValues,SetDiceValues] = useState([0,0,0,0,0]);
     const [DiceMeaning,SetDiceMeaning] = useState([6,6,6,6,6]);
     const [SelectedDices,SetSelectedDices] = useState([false,false,false,false,false]);
+    const [clansAngry,setClansAngry]=useState([false,false,false,false,false]);
 
     const [RoomId,SetRoomId]= useState('error');
 
@@ -58,6 +59,8 @@ const Game = (props)=>{
 
             if(DiceRoll.throwsremaining==0){
                 SetDiceMeaning(DiceRoll.meaning);
+                if(DiceRoll.meaning[0] + DiceRoll.meaning[1]==0 && CurentPlayerCharacter=='Suzy Lafayette')
+                    HealDamage(CurentPlayerName,2);
                 setActionState(true);
             }
 
@@ -120,6 +123,7 @@ const Game = (props)=>{
 
         if(ThrowsRemaining == 0){
             setActionState(true);
+            
             
         }
         
@@ -266,13 +270,19 @@ const Game = (props)=>{
             socket.emit("HealDamage",{name:PlayerName,delta:-1,room:RoomId});
             break;
         case 2:
+            socket.emit("HealDamage",{name:PlayerName,delta:2,room:RoomId});
             break;
         case 3:
+            socket.emit("HealDamage",{name:PlayerName,delta:1,room:RoomId});
+            RollDice();
             break;
         case 4:  
             AuxDiceMeaning[4]--;
             SetDiceMeaning(AuxDiceMeaning);
-            socket.emit("PoisonPlayer",{name:PlayerName,delta:1,room:RoomId});
+            if(CurentPlayerCharacter=='Jesse Jones' && CurentPlayerHP<5 &&PlayerName==CurentPlayerName)
+                socket.emit("PoisonPlayer",{name:PlayerName,delta:2,room:RoomId});
+            else
+                socket.emit("PoisonPlayer",{name:PlayerName,delta:1,room:RoomId});
             break;
         case -4:
             AuxDiceMeaning[4]--;
@@ -304,6 +314,7 @@ const Game = (props)=>{
                 <div className="CurentPlayerNameRoleContainer">
                     <p className="CurentPlayerName">{CurentPlayerName}</p>
                     <p className="CurentPlayerRole">{CurentPlayerRole}</p>
+                    <p className="CurentPlayerCharacter">{CurentPlayerCharacter}</p>
                 </div>
                 <p className="CurentPlayerHP">HP: {CurentPlayerHP}</p>
                 
@@ -315,12 +326,12 @@ const Game = (props)=>{
 
             <p className="ThrowsRemaining">Throws Remaining: {ThrowsRemaining}</p>
 
-            <div className="DicesContainer">
-                <Dice value={DiceValues[0]} onClick={()=>LockDice(0)} Selected={SelectedDices[0]} Index={0}/>
-                <Dice value={DiceValues[1]} onClick={()=>LockDice(1)} Selected={SelectedDices[1]} Index={1}/>
-                <Dice value={DiceValues[2]} onClick={()=>LockDice(2)} Selected={SelectedDices[2]} Index={2}/>
-                <Dice value={DiceValues[3]} onClick={()=>LockDice(3)} Selected={SelectedDices[3]} Index={3}/>
-                <Dice value={DiceValues[4]} onClick={()=>LockDice(4)} Selected={SelectedDices[4]} Index={4}/>
+            <div className={"DicesContainer"}>
+                <Dice value={DiceValues[0]} onClick={()=>LockDice(0)} Selected={SelectedDices[0]||(DiceValues[0]==4 && CurentPlayerCharacter != 'Black Jack')} Index={0}/>
+                <Dice value={DiceValues[1]} onClick={()=>LockDice(1)} Selected={SelectedDices[1]||(DiceValues[1]==4 && CurentPlayerCharacter != 'Black Jack')} Index={1}/>
+                <Dice value={DiceValues[2]} onClick={()=>LockDice(2)} Selected={SelectedDices[2]||(DiceValues[2]==4 && CurentPlayerCharacter != 'Black Jack')} Index={2}/>
+                <Dice value={DiceValues[3]} onClick={()=>LockDice(3)} Selected={SelectedDices[3]||(DiceValues[3]==4 && CurentPlayerCharacter != 'Black Jack')} Index={3}/>
+                <Dice value={DiceValues[4]} onClick={()=>LockDice(4)} Selected={SelectedDices[4]||(DiceValues[4]==4 && CurentPlayerCharacter != 'Black Jack')} Index={4}/>
                 
                 {/*
                     DiceValues.map((DiceValue,DiceIndex)=>{
@@ -343,13 +354,16 @@ const Game = (props)=>{
                         <div className="Player" key={index}>
                             <img src={CharacterPhoto(CharactersArray[index])}></img>
                             <p className={playerName == PlayersTurn ? "Bold":""}>{playerName == SherifName ? playerName+" <^>" : playerName}</p>
+                            <p className="Character">{CharactersArray[index]}</p> 
                             <p className="HP">HP:{HPArray[index]}</p> 
 
+                            
                             { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[5]>0) && (playerName != CurentPlayerName) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,5)}>Half</p> : <></> }
                             { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[4]>0) ?  <p className="HealDamageButton" onClick={()=>{HealDamage(playerName,-4) }}>Poison</p> :<></>}
                             { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[4]>0) ?  <p className="HealDamageButton" onClick={()=>{HealDamage(playerName,4)}}>Heal</p> :<></>}
+                            { (PlayersTurn == CurentPlayerName) && (CurentPlayerCharacter=='Sid Ketchum')&&(ThrowsRemaining==3) ?  <p className="HealDamageButton" onClick={()=>{HealDamage(playerName,3)}}>Heal and Roll</p> :<></>}
 
-
+                           
                             { (CurentPlayerCharacter != 'Rose Doolan') && (CurentPlayerCharacter != 'Calamity Janet') && (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[0]>0) &&
                             (
                                 playerName == PlayersArray[CurentIndex+1] ||

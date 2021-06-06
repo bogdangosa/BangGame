@@ -147,6 +147,7 @@ function RollDice(diceStates,room,PlayerID)
     const { Jucator } = require('./JucatorClass');
     const { Room } = require('./RoomClass');
     let DiceArray=[];
+    playerWhoRolled=room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)]
     for (let i=0;i<diceStates.length;i++)
     {
         if(diceStates[i]==0)
@@ -158,22 +159,22 @@ function RollDice(diceStates,room,PlayerID)
                 if(Dice==4)
                 {
                     room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)].ChangeHP(-1);
-                    if(room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)].getCharacter!='Black Jack')
+                    if(room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)].getCharacter()!='Black Jack')
                         room.DiceResult[i]=4;
                     //let PlayersHP=CreateHPArray(room.PlayersArray);
                     //io.to(room.RoomId).emit('PlayersUpdatedHp',PlayersHP);
                 }
                 else if(Dice==3)
                 {
-                    /*room.PlayersArray[room.PlayersArray.findIndex(Player =>Player.getId()==PlayerID)].takeArrow();
-                    room.nrOfArrows--;
-                    if(room.nrOfArrows==0)
+                    room.rivalClans[i]=1;
+                    if(room.rivalClans==[1,1,1,1,1])
                     {
-                        room.PlayersArray.forEach(PlayerWithArrows=>{
-                            let hp=PlayerWithArrows.takeDamageFromArrows();
-                        })
-                        room.nrOfArrows=9; 
-                    }*/
+                        if(playerWhoRolled.getCharacter=='Jourdonnais')
+                            playerWhoRolled.ChangeHP(-3);
+                        else
+                        playerWhoRolled.ChangeHP(-5);     
+                        room.rivalClans=[0,0,0,0,0];
+                    }
                 }
             }
             else
@@ -215,6 +216,7 @@ function DiceMeaning(Room)
 {
     let ResultArray=[0,0,0,0,0,0];
     let NrOfGatling=0;
+    playerWhoRolled=Room.PlayersArray[Room.PlayersArray.findIndex(Player=>Player.getId()==Room.PlayerToRollID)];
     for(let i=0;i<Room.DiceResult.length;i++)
     {
         switch(Room.DiceResult[i])
@@ -236,7 +238,10 @@ function DiceMeaning(Room)
             break;
             case 6:
                 NrOfGatling++;
-                if(NrOfGatling==3)
+                
+                if(NrOfGatling==3 && playerWhoRolled.getCharacter()!='Willy The Kid')
+                    ResultArray[5]++;
+                else if(NrOfGatling==2 && playerWhoRolled.getCharacter()=='Willy The Kid')
                     ResultArray[5]++;
             break;
         }

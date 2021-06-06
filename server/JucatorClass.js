@@ -16,7 +16,6 @@ class Jucator
     #role;
     #hp;
     #hpMax;
-    #nrOfArrows;
     #character;
     #left;
     #right;
@@ -28,7 +27,6 @@ class Jucator
         this.#player=player;
         this.#hp=8;
         this.#hpMax=8;
-        this.#nrOfArrows=0;
     }
     
 
@@ -68,10 +66,6 @@ class Jucator
     }
 
     //returns number of arrows
-    getArrows()
-    {
-        return this.#nrOfArrows;
-    }
 
     setRole(role)
     {
@@ -81,10 +75,6 @@ class Jucator
             this.#hpMax=this.#hpMax+2;
             this.#hp=this.#hp + 2;
         }
-    }
-    takeArrow()
-    {
-        this.#nrOfArrows++;
     }
 
     getRight()
@@ -148,13 +138,7 @@ class Jucator
         return this.#character;
     }
     //function to be called when that arrow stack is empty
-    takeDamageFromArrows()
-    {
-        this.#hp=this.#hp-this.#nrOfArrows;
-        this.#nrOfArrows=0;
-        return this.#hp;
-    }
-
+    
     
 }
 module.exports={Jucator}
