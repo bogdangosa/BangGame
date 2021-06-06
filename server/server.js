@@ -167,9 +167,14 @@ io.on('connection',socket=>{
         DiceArray=lib.RollDice(DiceArray,cRoom,socket.id);
         io.to(Data.room).emit('DiceResult',{result:DiceArray,meaning:DiceMeaning,throwsremaining:cRoom.NrOfThrows});
       }
-      
-      
 
+      let PlayersHP=lib.CreateHPArray(cRoom.PlayersArray);
+      PlayersHP.forEach((playerHp,index)=>{
+          if(playerHp<=0)
+            EliminatePlayer(cRoom,index);
+      })
+      io.to(cRoom.RoomId).emit('PlayersUpdatedHp',PlayersHP);
+      
     })
 
     socket.on('LeaveRoom',RoomName=>{
@@ -189,18 +194,8 @@ io.on('connection',socket=>{
       PlayerChangedHP.ChangeHP(data.delta);
       let PlayersHP=lib.CreateHPArray(cRoom.PlayersArray);
       PlayersHP.forEach((HP,index)=>{
-        if(HP==0){
-          let PlayerEliminatedName = cRoom.PlayersArray[index].getPlayer();
-          cRoom.PlayersArray = lib.PlayerEliminated(cRoom.PlayersArray[index].getId() , cRoom.PlayersArray);
-          PlayersHP = lib.CreateHPArray(cRoom.PlayersArray);
-          io.to(cRoom.RoomId).emit('UpdatePlayers',{
-            playersnamearray: lib.CreateNameArray(cRoom.PlayersArray),
-            playerscharacterarray:lib.CreateCharacterArray(cRoom.PlayersArray),
-            playersHPArray: PlayersHP,
-            eliminatedplayer:PlayerEliminatedName
-          });
-        
-        }
+        if(HP==0)
+          EliminatePlayer(cRoom,index);
       })
       io.to(data.room).emit('PlayersUpdatedHp',PlayersHP);
       //ia damage sau da heal;
@@ -243,6 +238,19 @@ io.on('connection',socket=>{
 })
 
 
+
+const EliminatePlayer = (cRoom,index)=>{
+  let PlayerEliminatedName = cRoom.PlayersArray[index].getPlayer();
+  cRoom.PlayersArray = lib.PlayerEliminated(cRoom.PlayersArray[index].getId() , cRoom.PlayersArray);
+  PlayersHP = lib.CreateHPArray(cRoom.PlayersArray);
+  io.to(cRoom.RoomId).emit('UpdatePlayers',{
+    playersnamearray: lib.CreateNameArray(cRoom.PlayersArray),
+    playerscharacterarray:lib.CreateCharacterArray(cRoom.PlayersArray),
+    playersHPArray: PlayersHP,
+    eliminatedplayer:PlayerEliminatedName
+  });
+  
+}
 
 
 

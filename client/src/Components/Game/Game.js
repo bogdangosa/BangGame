@@ -12,7 +12,7 @@ const Game = (props)=>{
     const [SherifName,setSherifName] = useState('');
     const [CurentPlayerHP,setCurentPlayerHP] =useState(0);
     const [SpectatorMode,setSpectatorMode] = useState(false);
-    const [PlayerDied,setPlayerDied] = useState(false);
+    const [PlayerDied,setPlayerDied] = useState('');
 
     const [PlayerDrinker,setPlayerDrinker]=useState('');
     const [Poison,setPoison]=useState();
@@ -82,14 +82,8 @@ const Game = (props)=>{
 
         })
 
-        socket.on('UpdatePlayers', data =>{
-            console.log(data.playersnamearray);
-            setPlayersArray(data.playersnamearray);
-            setCharactersArray(data.playerscharacterarray);
-            setHPArray(data.playersHPArray);
-            console.log(data.eliminatedplayer);
-            if(data.eliminatedplayer == CurentPlayerName)
-                setPlayerDied(true);
+        socket.on('UpdatePlayers', updateplayersdata =>{
+            UpdatePlayers(updateplayersdata);
         });
 
         socket.on('DrinkOffered',data =>{
@@ -99,6 +93,15 @@ const Game = (props)=>{
         
     },[]);
 
+
+    const UpdatePlayers = (updateplayersdata) =>{
+        console.log(updateplayersdata.playersnamearray);
+        setPlayersArray(updateplayersdata.playersnamearray);
+        setCharactersArray(updateplayersdata.playerscharacterarray);
+        setHPArray(updateplayersdata.playersHPArray);
+        console.log(updateplayersdata.eliminatedplayer);
+        setPlayerDied(updateplayersdata.eliminatedplayer);
+    }
 
     const SetStartingData = (data) =>{
         SetRoomId(data.room);
@@ -449,13 +452,13 @@ const Game = (props)=>{
 
             </div>
 
-            {PlayerDied ?
+            {(PlayerDied == CurentPlayerName) ?
                 <div className="PlayerDiedPopup">
-                       <p>You Died</p>
-                       <Button Text="Back to Lobby" onClick={ ()=>BackToLobby() } Selected={false}/>
-                       <Button Text="Continue Spectating" onClick={ ()=>ContinueSpectating() } Selected={false}/>
+                <p>You Died</p>
+                <Button Text="Back to Lobby" onClick={ ()=>BackToLobby() } Selected={false}/>
+                <Button Text="Continue Spectating" onClick={ ()=>ContinueSpectating() } Selected={false}/>
 
-                </div>
+                 </div>
 
                 :
                 
