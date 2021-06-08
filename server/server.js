@@ -119,32 +119,8 @@ io.on('connection',socket=>{
 
     socket.on('NextPlayer',RoomName=>{
       let cRoom = RoomArray[RoomArray.findIndex(sRoom=> sRoom.RoomId == RoomName)]; 
-      
-      
-      cRoom.Turn();
-      let PlayersTurnName = cRoom.PlayersArray.find(Player => Player.getId() == cRoom.PlayerToRollID).getPlayer();
 
-      io.to(RoomName).emit('PlayersTurn', {playersturnname:PlayersTurnName,throwsremaining:cRoom.NrOfThrows} );
-
-
-      //---------------------Test nu stiu daca o sa mearga
-      /*while(cRoom.NrOfThrows>0)
-      {
-        //now it is waiting for a request from the next player in line(PlayerTurnName from above)
-        socket.on('RollDice',DiceArray=>
-        {
-          console.log(DiceArray);
-          DiceArray=lib.RollDice(DiceArray,cRoom,socket.id);
-          console.log(DiceArray);
-          socket.to(RoomName).emit('DiceResult',DiceArray);
-          cRoomNrOfThrows--;
-        })
-      }
-      let cPlayerId=cRoom.PlayersArray[PlayersArray.findIndex(wantedPlayer=>wantedPlayer.getplayer==PlayersTurnName)]; //takes the ID of the player whose turn it is
-      socket.to(cPlayerId).emit(lib.DiceMeaning(DiceArray)); //emits to the curent player the meaning of the dice
-      cRoom.NrOfThrows=3;*/
-      //---------------------------------------------------
-
+      NextTurn(cRoom);
     })
 
 
@@ -180,7 +156,7 @@ io.on('connection',socket=>{
     socket.on('LeaveRoom',RoomName=>{
       let cRoom = RoomArray[RoomArray.findIndex(sRoom=> sRoom.RoomId == RoomName)]; 
 
-      cRoom.PlayersArray = lib.PlayerEliminated(socket.id , cRoom.PlayersArray);
+      cRoom.PlayersArray = lib.PlayerEliminated(socket.id , cRoom.PlayersArray,cRoom.GameInProgress);
 
       socket.leave(RoomName);
       socket.to(RoomName).emit( 'UserLeft' , lib.CreateNameArray(cRoom.PlayersArray) );
@@ -216,7 +192,7 @@ io.on('connection',socket=>{
         if(RoomName == socket.id) return;
         
         let cRoom = RoomArray.find(sRoom=> sRoom.RoomId == RoomName); 
-        cRoom.PlayersArray = lib.PlayerEliminated(socket.id , cRoom.PlayersArray);
+        cRoom.PlayersArray = lib.PlayerEliminated(socket.id , cRoom.PlayersArray,cRoom.GameInProgress);
         console.log(cRoom.PlayersArray);
 
         io.to(cRoom.RoomId).emit('UpdatePlayers',{
@@ -241,7 +217,9 @@ io.on('connection',socket=>{
 
 const EliminatePlayer = (cRoom,index)=>{
   let PlayerEliminatedName = cRoom.PlayersArray[index].getPlayer();
-  cRoom.PlayersArray = lib.PlayerEliminated(cRoom.PlayersArray[index].getId() , cRoom.PlayersArray);
+  if(cRoom.PlayerToRollID == cRoom.PlayersArray[index].getId())
+    NextTurn(cRoom);
+  cRoom.PlayersArray = lib.PlayerEliminated(cRoom.PlayersArray[index].getId() , cRoom.PlayersArray,cRoom.GameInProgress);
   PlayersHP = lib.CreateHPArray(cRoom.PlayersArray);
   io.to(cRoom.RoomId).emit('UpdatePlayers',{
     playersnamearray: lib.CreateNameArray(cRoom.PlayersArray),
@@ -250,6 +228,14 @@ const EliminatePlayer = (cRoom,index)=>{
     eliminatedplayer:PlayerEliminatedName
   });
   
+}
+
+const NextTurn=(cRoom)=>{
+        
+  cRoom.Turn();
+  let PlayersTurnName = cRoom.PlayersArray.find(Player => Player.getId() == cRoom.PlayerToRollID).getPlayer();
+
+  io.to(cRoom.RoomId).emit('PlayersTurn', {playersturnname:PlayersTurnName,throwsremaining:cRoom.NrOfThrows} );
 }
 
 

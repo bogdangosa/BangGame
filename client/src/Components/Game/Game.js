@@ -2,6 +2,7 @@ import React,{ useState, useEffect } from 'react'
 import './Game.css'
 import Button from '../Button/Button'
 import Dice from '../Dice/Dice'
+import { useHistory } from "react-router-dom";
 
 const Game = (props)=>{
     const [ThrowsRemaining,SetThrowsRemaining] = useState('');
@@ -30,6 +31,7 @@ const Game = (props)=>{
     const [RoomId,SetRoomId]= useState('error');
 
     const[ActionState,setActionState] = useState(false);
+    const history = useHistory();
 
     let socket = props.socket;
 
@@ -303,7 +305,7 @@ const Game = (props)=>{
     }
 
     const BackToLobby =()=>{
-
+        history.push("/");
     }
     const ContinueSpectating = () =>{
 
@@ -453,7 +455,7 @@ const Game = (props)=>{
             </div>
 
             {(PlayerDied == CurentPlayerName) ?
-                <div className="PlayerDiedPopup">
+                <div className="Popup">
                 <p>You Died</p>
                 <Button Text="Back to Lobby" onClick={ ()=>BackToLobby() } Selected={false}/>
                 <Button Text="Continue Spectating" onClick={ ()=>ContinueSpectating() } Selected={false}/>
@@ -470,14 +472,14 @@ const Game = (props)=>{
             
             
             {(CurentPlayerName == PlayerDrinker) ?
-                <div className="PlayerDiedPopup">  
+                <div className="Popup">  
                     <p>Someone ordered you a drink</p> 
-                    <Button Text="Accept" className="HealDamageButton" onClick={ ()=> {
+                    <Button Text="Accept" onClick={ ()=> {
                         socket.emit("HealDamage",{name:CurentPlayerName,delta:Poison,room:RoomId});
                         setPoison(0);
                         setPlayerDrinker(''); 
                     }}Selected={false}/>
-                    <Button Text="Decline" className="HealDamageButton" onClick={ ()=> {
+                    <Button Text="Decline" onClick={ ()=> {
                         setPoison(0);
                         setPlayerDrinker('');
                     }}Selected={false}/>
