@@ -143,7 +143,7 @@ function RollDice(diceStates,room,PlayerID)
     2=Pistol
     3=Sageata
     4=Dinamita
-    5=Bere
+    5= bautura(heal/damage)
     6=gatling
     */
     const { Jucator } = require('./JucatorClass');

@@ -8,6 +8,7 @@ const Lobby = (props)=> {
     const [playersArray,SetPlayersArray] = useState([]);
     const [ReadyState,SetReadyState] = useState(false);
     const [CurentPlayersName,setCurentPlayersName]= useState('');
+    const [AdminPlayerName,setAdminPlayersName]= useState('');
     const [RoomId,SetRoomId]= useState('');
     const [IsError,SetIsError] = useState(false);
 
@@ -31,7 +32,8 @@ const Lobby = (props)=> {
             let CurentPlayersArray = StartingLobbyData.curentPlayersArray;
 
             setCurentPlayersName(CurentPlayersArray[CurentPlayersArray.length-1]);
-            
+            setAdminPlayersName(StartingLobbyData.adminplayername);
+            console.log(StartingLobbyData.adminplayername);
             SetPlayersArray(CurentPlayersArray);
         }
     });
@@ -46,6 +48,10 @@ const Lobby = (props)=> {
 
     socket.on('UserLeft', rPlayersArray=>{
         SetPlayersArray(rPlayersArray);
+    })
+
+    socket.on('updateAdmin',newAdmin=>{
+        setAdminPlayersName(newAdmin);
     })
 
         
@@ -71,6 +77,14 @@ const Lobby = (props)=> {
         history.push("/");
     }
 
+    const makeAdmin = (newadminname) => {
+        socket.emit('makeAdmin',{room:RoomId,newAdminName:newadminname})
+    }
+
+    const kickPlayer = (playerKicked) => {
+        socket.emit('kickPlayer',{room:RoomId,playerKicked:playerKicked})
+    }
+
 
 
     return (
@@ -88,9 +102,15 @@ const Lobby = (props)=> {
                     {
                         playersArray.map((player,index)=>{
                             return (
-                                <div className="PlayerContainer" key={index}>
+                                <div className={player==AdminPlayerName ? "PlayerContainer PlayerContainerAdmin": "PlayerContainer"} key={index}>
                                     <img src={CharacterPhoto}></img>
                                     <p className="PlayerName">{player}</p>
+                                    {(CurentPlayersName==AdminPlayerName && player!=AdminPlayerName) ?
+                                    <div className="LobbyPlayerButtonContainer">
+                                       <Button Text="make Admin" Selected={false} onClick={()=>makeAdmin(player)}></Button>
+                                       <Button Text="kick Player" Selected={false} onClick={()=>kickPlayer(player)}></Button>
+                                    </div>
+                                    :<div></div>}
                                 </div>
                             );
                         })

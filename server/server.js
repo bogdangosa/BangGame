@@ -46,15 +46,16 @@ io.on('connection',socket=>{
 
       NewRoom.AddPlayer(Name,socket.id);
 
+      let AdminPlayer = NewRoom.PlayersArray.find(Player => Player.getId()==NewRoom.AdminPlayer);
       socket.broadcast.to(NewRoom.RoomId).emit('NewPlayer',Name);
-      socket.emit('StartingLobbyData',{room:NewRoom.RoomId,curentPlayersArray:lib.CreateNameArray(NewRoom.PlayersArray)});
+      socket.emit('StartingLobbyData',{room:NewRoom.RoomId,curentPlayersArray:lib.CreateNameArray(NewRoom.PlayersArray),adminplayername:AdminPlayer.getPlayer()});
     })
 
 
     socket.on('NewUser',(UserData)=>{
       let cRoom = RoomArray.find(sRoom=> sRoom.RoomId == UserData.room); 
       if(cRoom == null || cRoom.GameInProgress){
-        socket.emit('StartingLobbyData',{room:"error",curentPlayersArray:0});
+        socket.emit('StartingLobbyData',{room:"error",curentPlayersArray:0,adminplayername:"none"});
       }
       else{ 
     
@@ -62,8 +63,10 @@ io.on('connection',socket=>{
         socket.join(cRoom.RoomId);
 
 
+        let AdminPlayer = cRoom.PlayersArray.find(Player => Player.getId()==cRoom.AdminPlayer);
+
         socket.broadcast.to(cRoom.RoomId).emit('NewPlayer',UserData.name);
-        socket.emit('StartingLobbyData',{room:cRoom.RoomId,curentPlayersArray:lib.CreateNameArray(cRoom.PlayersArray)});  
+        socket.emit('StartingLobbyData',{room:cRoom.RoomId,curentPlayersArray:lib.CreateNameArray(cRoom.PlayersArray),adminplayername:AdminPlayer.getPlayer()});  
       }
 
     })
@@ -109,6 +112,17 @@ io.on('connection',socket=>{
       cRoom.PlayersReady--;      
     })
 
+    socket.on('makeAdmin',Data=>{
+      let cRoom = RoomArray[RoomArray.findIndex(sRoom => sRoom.RoomId == Data.room)];
+      let NewAdminPlayer = cRoom.PlayersArray.find(Player => Player.getPlayer()==Data.newAdminName);
+      cRoom.AdminPlayer = NewAdminPlayer.getId();
+      io.to(Data.room).emit('updateAdmin',NewAdminPlayer.getPlayer());
+    })
+
+    socket.on('kickPlayer',Data=>{
+      let cRoom = RoomArray[RoomArray.findIndex(sRoom => sRoom.RoomId == Data.room)];
+      let KickedPlayer = cRoom.PlayersArray.find(Player => Player.getPlayer()==Data.playerKicked);
+    })
 
     //receives the PlayerRole of the player to be eliminated, deletes him from array and emits to the rest of players his role
     socket.on('PlayerEliminated',PlayerRole=>
