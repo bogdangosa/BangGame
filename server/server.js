@@ -244,6 +244,33 @@ io.on('connection',socket=>{
 
 
 
+<<<<<<< Updated upstream
+=======
+const EliminatePlayer = (cRoom,index)=>{
+  let PlayerEliminatedName = cRoom.PlayersArray[index].getPlayer();
+  if(cRoom.PlayerToRollID == cRoom.PlayersArray[index].getId())
+    NextTurn(cRoom);
+  cRoom.PlayersArray = lib.PlayerEliminated(cRoom.PlayersArray[index].getId() , cRoom.PlayersArray,cRoom.GameInProgress);
+  PlayersHP = lib.CreateHPArray(cRoom.PlayersArray);
+  io.to(cRoom.RoomId).emit('UpdatePlayers',{
+    playersnamearray: lib.CreateNameArray(cRoom.PlayersArray),
+    playerscharacterarray:lib.CreateCharacterArray(cRoom.PlayersArray),
+    playersHPArray: PlayersHP,
+    eliminatedplayer:PlayerEliminatedName
+  });
+  
+}
+
+const NextTurn=(cRoom)=>{
+    
+ 
+  cRoom.Turn();
+  let PlayersTurnName = cRoom.PlayersArray.find(Player => Player.getId() == cRoom.PlayerToRollID).getPlayer();
+
+  io.to(cRoom.RoomId).emit('PlayersTurn', {playersturnname:PlayersTurnName,throwsremaining:cRoom.NrOfThrows,winners:lib.IsGameOver(cRoom)} );
+}
+
+>>>>>>> Stashed changes
 
 
 //Function testing  

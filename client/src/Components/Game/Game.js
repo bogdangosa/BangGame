@@ -16,6 +16,8 @@ const Game = (props)=>{
 
     const [PlayerDrinker,setPlayerDrinker]=useState('');
     const [Poison,setPoison]=useState();
+    const [PoisonMap]=useState(new Map())
+    const [Winners,setWinners]=useState([]);
 
     const [PlayersArray,setPlayersArray] = useState([]);
     const [CharactersArray,setCharactersArray] = useState([]);
@@ -42,13 +44,18 @@ const Game = (props)=>{
 
 
         socket.on('PlayersTurn',data=>{
-            let PlayersTurnName = data.playersturnname;
-            console.log(PlayersTurnName);
-            setPlayersTurn(PlayersTurnName);
-            SetDiceValues([0,0,0,0,0]);
-            SetSelectedDices([false,false,false,false,false]);
-            SetThrowsRemaining(data.throwsremaining);
-            setActionState(false);
+            if(data.winners!=[])
+            {
+                let PlayersTurnName = data.playersturnname;
+                console.log(PlayersTurnName);
+                setPlayersTurn(PlayersTurnName);
+                SetDiceValues([0,0,0,0,0]);
+                SetSelectedDices([false,false,false,false,false]);
+                SetThrowsRemaining(data.throwsremaining);
+                setActionState(false);
+            }
+            else
+                setWinners(data.winners);
         });
 
         socket.on('DiceResult',DiceRoll=>{
@@ -90,8 +97,13 @@ const Game = (props)=>{
         });
 
         socket.on('DrinkOffered',data =>{
-            setPlayerDrinker(data.player);
-            setPoison(data.poison);
+            if (PoisonMap.has(data.player))
+            {
+                PoisonMap.delete(data.player)
+                PoisonMap.set(data.player,data.poison*2)
+            }
+            else
+                PoisonMap.set(data.player,data.poison);
         })
         
     },[]);
@@ -349,6 +361,90 @@ const Game = (props)=>{
                             { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[5]>0) && (playerName != CurentPlayerName) ? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,5)}>Half</p> : <></> }
                             { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[4]>0) ?  <p className="HealDamageButton" onClick={()=>{HealDamage(playerName,-4) }}>Poison</p> :<></>}
                             { (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[4]>0) ?  <p className="HealDamageButton" onClick={()=>{HealDamage(playerName,4)}}>Heal</p> :<></>}
+<<<<<<< Updated upstream
+=======
+                            { (PlayersTurn == CurentPlayerName) && (CurentPlayerCharacter=='Sid Ketchum')&&(ThrowsRemaining==3) ?  <p className="HealDamageButton" onClick={()=>{HealDamage(playerName,3)}}>Heal and Roll</p> :<></>}
+
+                           
+                            { (CurentPlayerCharacter != 'Rose Doolan') && (CurentPlayerCharacter != 'Calamity Janet') && (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[0]>0) &&
+                            (
+                                playerName == PlayersArray[CurentIndex+1] ||
+                                playerName == PlayersArray[CurentIndex-1] ||
+                                (CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-1]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[0])
+                            )? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,0)}>Cutit</p> : <></> }
+
+
+                            { (CurentPlayerCharacter != 'Rose Doolan') && (CurentPlayerCharacter != 'Calamity Janet') && (PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[1]>0) &&
+                            (
+                                playerName == PlayersArray[CurentIndex+2] ||
+                                (playerName == PlayersArray[CurentIndex+1] &&  PlayersArray.length<4) ||
+                                playerName == PlayersArray[CurentIndex-2] ||
+                                (CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-2]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[1]) ||
+                                (CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-1]&& PlayersArray.length<4)
+                            )? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,1)}>Pistol</p> : <></> }
+                            
+                            
+
+                            {(CurentPlayerCharacter== 'Calamity Janet')&&(PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[0]>0) && 
+                            (
+                                playerName == PlayersArray[CurentIndex+2] || 
+                                playerName == PlayersArray[CurentIndex-2] ||
+                                (CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-2]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[1]) ||
+                                playerName == PlayersArray[CurentIndex+1] || 
+                                playerName == PlayersArray[CurentIndex-1] ||
+                                (CurentIndex==0 && playerName==PlayersArray[PlayersArray.length-1]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[0])
+                            )? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,0)}>Damage</p> : <></> }
+
+
+                            {(CurentPlayerCharacter== 'Calamity Janet')&&(PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[1]>0) && 
+                            (
+                                playerName == PlayersArray[CurentIndex+2] || 
+                                playerName == PlayersArray[CurentIndex-2] ||
+                                (CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-2]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[1]) ||
+                                playerName == PlayersArray[CurentIndex+1] || 
+                                playerName == PlayersArray[CurentIndex-1] ||
+                                (CurentIndex==0 && playerName==PlayersArray[PlayersArray.length-1]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[0])
+                            )? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,1)}>Damage</p> : <></> }
+
+                            {(CurentPlayerCharacter== 'Rose Doolan')&&(PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[0]>0) && 
+                            (
+                                playerName == PlayersArray[CurentIndex+2] || 
+                                playerName == PlayersArray[CurentIndex-2] ||
+                                (CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-2]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[1]) ||
+                                playerName == PlayersArray[CurentIndex+1] || 
+                                playerName == PlayersArray[CurentIndex-1] ||
+                                (CurentIndex==0 && playerName==PlayersArray[PlayersArray.length-1]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[0]) ||
+                                playerName == PlayersArray[CurentIndex+3] || 
+                                playerName == PlayersArray[CurentIndex-3] ||
+                                (CurentIndex==0 && playerName==PlayersArray[PlayersArray.length-3]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[2])
+                            )? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,0)}>Damage</p> : <></> }
+
+
+                            {(CurentPlayerCharacter== 'Rose Doolan')&&(PlayersTurn == CurentPlayerName) && (ActionState && DiceMeaning[1]>0) && 
+                            (
+                                playerName == PlayersArray[CurentIndex+2] || 
+                                playerName == PlayersArray[CurentIndex-2] ||
+                                (CurentIndex==0&&playerName==PlayersArray[PlayersArray.length-2]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[1]) ||
+                                playerName == PlayersArray[CurentIndex+1] || 
+                                playerName == PlayersArray[CurentIndex-1] ||
+                                (CurentIndex==0 && playerName==PlayersArray[PlayersArray.length-1]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[0]) ||
+                                playerName == PlayersArray[CurentIndex+3] || 
+                                playerName == PlayersArray[CurentIndex-3] ||
+                                (CurentIndex==0 && playerName==PlayersArray[PlayersArray.length-3]) ||
+                                (CurentIndex==PlayersArray.length-1&&playerName==PlayersArray[2])
+                            )? <p className="HealDamageButton" onClick={()=>HealDamage(playerName,1)}>Damage</p> : <></> }
+>>>>>>> Stashed changes
                             
                             
                         </div>
@@ -373,7 +469,21 @@ const Game = (props)=>{
 
             }
 
+            {(Winners.includes(CurentPlayerName))?
+                <div className="Popup">
+                <p>You Won</p>
+                <Button Text="Back to Lobby" onClick={ ()=>BackToLobby() } Selected={false}/>
+                <Button Text="Continue Spectating" onClick={ ()=>ContinueSpectating() } Selected={false}/>
+
+                 </div>
+
+                :
+                
+                      
+                <div></div> 
+            }
             
+<<<<<<< Updated upstream
             
             {(CurentPlayerName == PlayerDrinker) ?
                 <div className="PlayerDiedPopup">  
@@ -386,6 +496,17 @@ const Game = (props)=>{
                     <Button Text="Decline" className="HealDamageButton" onClick={ ()=> {
                         setPoison(0);
                         setPlayerDrinker('');
+=======
+            {(PoisonMap.has(CurentPlayerName)) ?
+                <div className="Popup">  
+                    <p>Someone ordered you a drink</p> 
+                    <Button Text="Accept" onClick={ ()=> {
+                        socket.emit("HealDamage",{name:CurentPlayerName,delta:PoisonMap.get(CurentPlayerName),room:RoomId});
+                        PoisonMap.delete(CurentPlayerName)
+                    }}Selected={false}/>
+                    <Button Text="Decline" onClick={ ()=> {
+                        PoisonMap.delete(CurentPlayerName)
+>>>>>>> Stashed changes
                     }}Selected={false}/>
                     
                 </div>    

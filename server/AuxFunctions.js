@@ -41,6 +41,7 @@ function startOfGame(PlayersArray)
             roleArray=["Bandit","Outlaw","Deputee","Bandit","Sherif","Deputee","Bandit","Outlaw"];
             break;
     }
+    shuffle(roleArray);
     while(n)
             {
                 let p=Math.floor(Math.random()*n);
@@ -70,6 +71,24 @@ function startOfGame(PlayersArray)
     return PlayerArray1;
 
 
+}
+
+function shuffle(array) {
+    var currentIndex = array.length,  randomIndex;
+  
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+  
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+  
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+  
+    return array;
 }
 
 function CreateNameArray(PlayersArray){
@@ -122,8 +141,18 @@ function PlayerEliminated(id,playerArray)
 {
     let JucatorI,JucatorAux;
     JucatorI=playerArray.findIndex(Jucator=>Jucator.getId()==id);  
+<<<<<<< Updated upstream
     playerArray[JucatorI].getLeft().setRight(playerArray[JucatorI].getRight());                //connection between left and right of the player are beeing made
     playerArray[JucatorI].getRight().setLeft(playerArray[JucatorI].getLeft());
+=======
+    if(GameInProgress){
+        if(playerArray[JucatorI]!=null)
+        {
+            playerArray[JucatorI].getLeft().setRight(playerArray[JucatorI].getRight());                //connection between left and right of the player are beeing made
+            playerArray[JucatorI].getRight().setLeft(playerArray[JucatorI].getLeft());
+        }
+    }
+>>>>>>> Stashed changes
     JucatorAux=playerArray[0];
     playerArray[0]=playerArray[JucatorI];
     playerArray[JucatorI]=JucatorAux;
@@ -243,7 +272,7 @@ function DiceMeaning(Room)
     return ResultArray;
 }
 
-function IsGameOver(Room)
+function IsGameOver(cRoom)
 {
     //checks how many players of each role are alive
     //if one of the win condition is fullfilled, an array of winning players ID is returned
@@ -252,37 +281,38 @@ function IsGameOver(Room)
     let BanditAlive=0;
     let DeputeeAlive=0;
     let OutlawAlive=0;
-    let SherifArray;
-    let BanditArray;
-    let OutlawArray;
-    for(let i=0;i<=Room.PlayersArray.length;i++)
+    let SherifArray=[];
+    let BanditArray=[];
+    let OutlawArray=[];
+    let DeputeeArray=[];
+    for(let i=0;i<=cRoom.PlayersArray.length-1;i++)
     {
-        if(Room.PlayersArray[i].getRole()=="Sherif")
+        if(cRoom.PlayersArray[i].getRole()=="Sherif")
         {
             SherifAlive++;
-            SherifArray.push(Room.PlayersArray[i].getId());
+            SherifArray.push(cRoom.PlayersArray[i].getPlayer());
         }
-        if(AuxPlayerArray[i].getRole()=="Outlaw")
+        if(cRoom.PlayersArray[i].getRole()=="Outlaw")
         {
             OutlawAlive++;
-            OutlawArray.push(Room.PlayersArray[i].getId());
+            OutlawArray.push(cRoom.PlayersArray[i].getPlayer());
         }
-        if(AuxPlayerArray[i].getRole()=="Bandit")
+        if(cRoom.PlayersArray[i].getRole()=="Bandit")
         {
             BanditAlive++;
-            BanditArray.push(Room.PlayersArray[i].getId());
+            BanditArray.push(cRoom.PlayersArray[i].getPlayer());
         }
-        if(AuxPlayerArray[i].getRole()=="Deputee")
+        if(cRoom.PlayersArray[i].getRole()=="Deputee")
         {
             DeputeeAlive++;
-            DeputeeArray.push(Room.PlayersArray[i].getId());
+            DeputeeArray.push(cRoom.PlayersArray[i].getPlayer());
         }
     }
     if(SherifAlive==0)
         return BanditArray;
     else if(BanditAlive==0&&OutlawAlive==0)
     {
-        return SherifArray;
+        return SherifArray.concat(DeputeeArray);
     }
     else if(OutlawAlive==1&&BanditAlive==0&&DeputeeAlive==0&&SherifAlive==0)
     {
